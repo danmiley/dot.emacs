@@ -520,8 +520,6 @@ Null prefix argument turns off the mode."
 (add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
 (add-hook 'ruby-mode-hook (lambda () (local-set-key "\r" 'newline-and-indent)))
 
-
-
 ;; cycle through buffers with Ctrl-Tab (like Chrome/Firefox)
 (global-set-key (kbd "\C-cb") 'bury-buffer)
 (global-set-key (kbd "\C-cf") 'next-buffer)
@@ -722,11 +720,13 @@ Null prefix argument turns off the mode."
 
 ;; (load "~/dot.emacs.d/nxml-mode-20041004/rng-auto.el")
 
-;; (load "~/Dropbox/home/dot.emacs.d/html-helper-mode.el")
-;; (require 'html-helper-mode "html-helper-mode.el")
-;; (setq auto-mode-alist
-;;         (cons '("\\.\\(xml\\|xsl\\|xsdl\\|rng\\|xhtml\\|html\\)\\'" . nxml-mode)
-;; 	      auto-mode-alist))
+
+;; html
+
+(add-to-list 'auto-mode-alist '("\\.html\\'" . html-helper-mode))
+
+
+
 
 (setq auto-mode-alist
         (cons '("\\.\\(html\\\)\\'" . html-mode)
