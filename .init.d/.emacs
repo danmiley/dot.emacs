@@ -19,12 +19,15 @@
 ;; http://mixandgo.com/blog/how-i-ve-convinced-emacs-to-dance-with-ruby
 ;; some good stuff for 2015
 ;; http://crypt.codemancers.com/posts/2013-09-26-setting-up-emacs-as-development-environment-on-osx/
+;; http://aaronbedra.com/emacs.d/
 
 ;; load to enable faultless and direct read and save in encrpted format gz
 ;; ;; (ignore-errors
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/lisp/jka-compr.elc")
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/jka-compr.elc")
 ;; ;;  )
+
+(defalias 'yes-or-no-p 'y-or-n-p)
 
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
