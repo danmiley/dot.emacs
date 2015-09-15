@@ -22,15 +22,31 @@
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/lisp/jka-compr.elc")
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/jka-compr.elc")
 ;; ;;  )
-
+autopair-mode
 
 (require 'package) ;; You might already have this line
+
+(setq package-list '(autopair))
+
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
 (when (< emacs-major-version 24)
   ;; For important compatibility libraries like cl-lib
- (add-to-list 'package-archives '("marmalade" . "https://marmalade-repo.org/packages/")))
+
+ (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/")))
 (package-initialize) ;; You might already have this line
+
+;; list the packages you want
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+
 
 (require 'cl)
 (defun bk-kill-buffers (regexp)
@@ -94,8 +110,8 @@ Null prefix argument turns off the mode."
 ;; ;; (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
 
 ;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d" load-path))
-(require 'rvm)
-(rvm-use-default) ;; use rvm's default ruby for the current Emacs session
+;;(require 'rvm)
+;; (rvm-use-default) ;; use rvm's default ruby for the current Emacs session
 
 
 ;; run test on line
@@ -230,7 +246,7 @@ Null prefix argument turns off the mode."
 
 ;; ;; (setq org-directory "~/Dropbox/home/dot.emacs.d/org-mode")
 
-(require 'ox-confluence)
+;; ;; (require 'ox-confluence)
 
 ;;(load-file "~/home/dot.emacs.d/p4.el")
 
