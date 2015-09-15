@@ -41,4 +41,4 @@
 
 (set-frame-parameter nil 'alpha 0.9) 
 
-(load-file "./.init.d/.emacs")
+(load-file "~/dot.emacs/.init.d/.emacs")
