@@ -22,11 +22,14 @@
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/lisp/jka-compr.elc")
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/jka-compr.elc")
 ;; ;;  )
-autopair-mode
+
+ (ignore-errors
+  (load-file "~/dot.emacs/.init.d/bash_shell.el")
+ )
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair))
+(setq package-list '(autopair yaml-mode org-mode yasnippet magit color-theme color-theme-sanityinc-solarized flycheck rinari thingatpt thingatpt+))
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -46,7 +49,8 @@ autopair-mode
   (unless (package-installed-p package)
     (package-install package)))
 
-
+;; activate installed packages
+(package-initialize)
 
 (require 'cl)
 (defun bk-kill-buffers (regexp)
@@ -221,8 +225,8 @@ Null prefix argument turns off the mode."
 	))
 
 ;; ;; ido - rinari likes this
-;;(require 'ido)
-;;(ido-mode nil);; but ido is hard to use, needs review
+(require 'ido)
+(ido-mode t);; but ido is hard to use, needs review
 
 (setq inhibit-splash-screen t) ;; no splash screen
 ;; (set-fringe-mode 3) ;; ou can put the following in your .emacs file to control the size of the fringe on the left and right:
@@ -609,6 +613,7 @@ Null prefix argument turns off the mode."
 
 ;;(add-hook 'after-init-hook 'color-theme-twilight)
 
+
 ;; shell-toggle.el stuff
 
 ;; (load-file "~/Dropbox/home/dot.emacs.d/shell-toggle.el")
@@ -680,6 +685,9 @@ Null prefix argument turns off the mode."
 
 ;; this minimizes emacs win, avoid
 (global-set-key [(control z)]  nil)
+
+
+ (load-theme (quote sanityinc-tomorrow-bright) nil nil)
 
 
 ;; only if in its own window (not in a term, run the color scheme
@@ -798,11 +806,11 @@ Null prefix argument turns off the mode."
 
 ;; (setq auto-mode-alist (append '(("\\.js$" . c-mode)) auto-mode-alist))
 
-;; ;; (defun open-dot-emacs ()
-;; ;;   "opening-dot-emacs"
-;; ;;   (interactive)				;this makes the function a  command too
-;; ;;   (find-file "~/Dropbox/home/dot.emacs.d/.emacs")
-;; ;;   )
+(defun open-dot-emacs ()
+  "opening-dot-emacs"
+  (interactive)				;this makes the function a  command too
+  (find-file "~/dot.emacs/.init.d/.emacs")
+  )
 
 
 ;; ---------------------------------------------------------------------------
@@ -1293,12 +1301,12 @@ With arg, nukes first."
 ;; The command `browse-url-of-buffer' gets a browser to render the URL associated with the file in the current buffer. This is great when editing web-related pages. For example, when you are editing an HTML file, you can have it rendered in your favourite browser by typing `C-c C-v'. This is especially nice if you are using a browser within Emacs like w3 or w3m; then you can have your source in the top window of an Emacs frame, and the output in the bottom frame, and simply regenerate whenever you like without ever having to leave the source!
 
 ;; will load that to the end
-(server-mode)
+;; ;; (server-mode)
 
 ;; allow for use of emacsclient
-(if window-system
-    (server-start)
-)
+;; ;; (if window-system
+;; ;;     (server-start)
+;; ;; )
 
 
 ;;-----------------------------------------------------------------------------
