@@ -40,4 +40,5 @@
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-helper-mode))
 
 (set-frame-parameter nil 'alpha 0.9) 
-(put 'set-goal-column 'disabled nil)
+
+(load-file "./.init.d/.emacs")
