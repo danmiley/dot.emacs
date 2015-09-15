@@ -16,6 +16,9 @@
 ;;           jdee.sunsite.dk/rootpage.html  = java dev environment
 ;;-----------------------------------------------------------------------------
 
+;; http://mixandgo.com/blog/how-i-ve-convinced-emacs-to-dance-with-ruby
+;; some good stuff for 2015
+;; http://crypt.codemancers.com/posts/2013-09-26-setting-up-emacs-as-development-environment-on-osx/
 
 ;; load to enable faultless and direct read and save in encrpted format gz
 ;; ;; (ignore-errors
@@ -25,18 +28,16 @@
 
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
+  (load-file "~/dot.emacs/.init.d/mac_only.el")
  )
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair yaml-mode org yasnippet color-theme color-theme-sanityinc-solarized flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee  yasnippet))
+(setq package-list '(autopair yaml-mode org color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode ))
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
-(when (< emacs-major-version 24)
-  ;; For important compatibility libraries like cl-lib
-
- (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/")))
+ (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize) ;; You might already have this line
 
 ;; list the packages you want
@@ -158,6 +159,10 @@ Null prefix argument turns off the mode."
     (let ((term (if (zerop(length term)) default term)))
     (shell-command (concat "echo 'ri -f ansi " term  " ' | bash --login" )))))
 
+
+(global-set-key (kbd "C-c o") 'regenerate-ruby-docs)
+
+
 ;; Account validate_settings
 ;; to use, insertion point should be right after the function or Classname name, then do this:
 ;; result page should show up in your default browser
@@ -174,15 +179,6 @@ Null prefix argument turns off the mode."
 	(let* ((filezname  (buffer-file-name (current-buffer))))
 	 (shell-command (concat "echo 'rdoc -r " filezname " ' | bash --login" ))))
 
-(defun open-finder-here ()
-  "current buffers directory opened in macos finder"
-	  (interactive)
-	 (shell-command (concat "open . "  )))
-(global-set-key "\C-x\C-o" 'open-finder-here)
-
-
-
-(global-set-key (kbd "C-c o") 'regenerate-ruby-docs)
 
 ;; trial
 (setq explicit-bash-args (list "--login" "--init-file" "/Users/dan/.profile" "-i"))
@@ -326,21 +322,6 @@ Null prefix argument turns off the mode."
 ;; (define-key function-key-map [delete] [deletechar])
 
 
-
-;; towards a perfect ruby doc finder:
-(defun ruby-oo()
-
-  (interactive)
-  (let* ((default (region-or-word-at-point))
-	 (term (read-string (format "Ruby doc lookup for this (%s): "      default) default)))
-    (let ((term (if (zerop(length term)) default term)))
-      (browse-url (format "http://www.google.com/webhp#q=%s+site:ruby-doc.org&btnI" term)))))
-
-;; to use, insertion point should be right after the function or Classname name, then do this:
-;; result page should show up in your default browser
-(global-set-key (kbd "C-c r") 'ruby-oo)
-;; eg, try it on this line:
-;; Hash
 
 (defun maximize-frame ()
   (interactive)
@@ -529,11 +510,18 @@ Null prefix argument turns off the mode."
 (global-set-key (kbd "\C-cb") 'bury-buffer)
 (global-set-key (kbd "\C-cf") 'next-buffer)
 
-;; ;; (add-to-list 'load-path
-;; ;;                   "~/Dropbox/home/dot.emacs.d/plugins/yasnippet-0.6.1c")
-;; ;;     (require 'yasnippet) ;; not yasnippet-bundle
-;; ;;     (yas/initialize)   ;; TODO
-;; ;;     (yas/load-directory "~/Dropbox/home/dot.emacs.d/plugins/yasnippet-0.6.1c/snippets")
+
+;; tried but new snippet package didnt configure right, sticking to old setup for now. 
+
+ (ignore-errors
+(add-to-list 'load-path
+                   "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c")
+    (require 'yasnippet) ;; not yasnippet-bundle
+    (yas/initialize)   ;; TODO
+    (yas/load-directory "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets")
+    (yas-global-mode 1))
+
+
 ;;	(yas/load-directory "~/home/dot.emacs.d/plugins/yasnippet-0.6.1c/snippets/text-mode/ruby-mode/shoulda-mode")
 ;; might break if not installed! ugh
 
@@ -548,7 +536,6 @@ Null prefix argument turns off the mode."
 
 ;;  typography stuff, widen line spacing
 (setq-default line-spacing 1)
-
 
 (savehist-mode 1)
 
@@ -603,8 +590,6 @@ Null prefix argument turns off the mode."
 (dolist (mode autopair-modes) (add-hook (intern (concat (symbol-name mode) "-hook")) 'turn-on-autopair-mode))
 
 
-;;(load-file "~/home/dot.emacs.d/rspec-mode/rspec-mode-bjorn.el")
-
 
 ;; (load-file "~/Dropbox/home/dot.emacs.d/session.el")
 (require 'session)
@@ -621,9 +606,9 @@ Null prefix argument turns off the mode."
 
 ;; (global-set-key [f4] 'shell-toggle)
 
-(shell)                       ;; start a shell
+;; (shell)                       ;; start a shell
 ;; (rename-buffer "shell-first") ;; rename it
-(rename-buffer "shell") ;; rename it
+;; (rename-buffer "shell") ;; rename it
 
 ;;;;  improve shell history
 (add-hook 'shell-mode-hook
@@ -670,22 +655,12 @@ Null prefix argument turns off the mode."
 (global-set-key (kbd "TAB") 'self-insert-command)
 
 
-;;; This was installed by package-install.el.
-;;; This provides support for the package system and
-;;; interfacing with ELPA, the package archive.
-;;; Move this code earlier if you want to reference
-;;; packages in your .emacs.
-;; (when
-;;     (load
-;; ;;     (expand-file-name b"~/.emacs.d/elpa/package.el"))
-;;      (expand-file-name "~/Dropbox/home/dot.emacs.d/elpa/package.el"))
-;;   (package-initialize))
-
-
 ;; this minimizes emacs win, avoid
 (global-set-key [(control z)]  nil)
 
-(load-theme (quote sanityinc-tomorrow-night) nil nil)
+ (color-theme-sanityinc-tomorrow-night)
+
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 ;; only if in its own window (not in a term, run the color scheme
 
@@ -748,9 +723,6 @@ Null prefix argument turns off the mode."
 (setq auto-mode-alist
       (cons '("\\.html$" . html-mode) auto-mode-alist))
 
-;; load actionscript mode
-;;(load-file "~/dot.emacs.d/csharp-mode.el")  ;; phpmode
-;;(load-file "~/dot.emacs.d/actionscript-mode.el")  ;; phpmode
 
 ;; jump to and from specific places
 (autoload 'session-jump-to-last-change "session")
@@ -835,7 +807,7 @@ Null prefix argument turns off the mode."
     (buffer-substring (point-min) (point-max))))
 
 (defun flip_ruby ()
-  "opening-dot-emacs"
+  "flip ruby"
 	  (interactive)				;this makes the function a  command too
 	(if (string-match "_spec" (buffer-file-name (current-buffer)))
 				(find-file (string-replace-2 "/spec"  "/app" (string-replace-2 "_spec.rb" ".rb"(buffer-file-name (current-buffer)))))
@@ -914,12 +886,6 @@ Null prefix argument turns off the mode."
 
 (setq process-coding-system-alist (cons '("bash" . raw-text-unix)
 					process-coding-system-alist))
-(if window-system
-(cond ((fboundp 'global-font-lock-mode)
-       ;; Turn on font-lock in all modes that support it
-       (global-font-lock-mode t)
-       ;; Maximum colors
-       (setq font-lock-maximum-decoration t))))
 
 ;; The above code uses the default faces for
 ;;decoration. If you would like to customize the
@@ -964,20 +930,6 @@ Null prefix argument turns off the mode."
 			    command switches)))
 
 
-;; WINDOWS SPECIFIC
-;; To copy between Emacs and other apps, you may
-;;need to use the appropriate Windows codepage as
-;;your coding system. To do this, you need to set
-;; up the codepage first: 0
-;; (if (eq window-system 'w32)
-;;     ((codepage-setup 1251)
-;;      (set-selection-coding-system 'cp1251)
-;;      )
-;;  )
-
-
-
-
 ;;{{{ Script creation and debugging
 
 ;;{{{ make-perl-script
@@ -1006,7 +958,6 @@ With arg, nukes first."
   (beginning-of-buffer)
   (search-forward "usage=\"Usage: $0 \[-$flags\]"
 		  nil t))
-
 
 
 ;; selective yanking (see selective-yank below)
@@ -1111,7 +1062,6 @@ With arg, nukes first."
 ;;The function is made an extension to the minibuffer complete-word function by:
 
 (define-key minibuffer-local-completion-map " " 'geosoft-parse-minibuffer) 
-
 
 ;; Navigator
 
@@ -1226,50 +1176,8 @@ With arg, nukes first."
 ;; ;; (load-file "~/Dropbox/home/dot.emacs.d/magit/magit.el")  
 
 
-
-
-
-;; emacs transparency
-
-
 (eval-when-compile (require 'cl))
 
-
-;; makes emacs see through or not
-;; form of (%viewing %background)
-(defun toggle-transparency ()
-   (interactive)
-   (if (/=
-        (cadr (find 'alpha (frame-parameters nil) :key #'car))
-        100)
-       (set-frame-parameter nil 'alpha '(100 100))
-     (set-frame-parameter nil 'alpha '(85 50))))
-     (defun ec ()
-       (interactive)
-       (let ((inhibit-read-only t))
-         (erase-buffer))
-       (eshell-send-input))
-
-(global-set-key (kbd "C-c t") 'toggle-transparency)
-
-
- ;; (defun toggle-transparency ()
- ;;   (interactive)
- ;;   (if (/=
- ;;        (cadr (find 'alpha (frame-parameters nil) :key #'car))
- ;;        100)
- ;;       (set-frame-parameter nil 'alpha '(100 100))
- ;;     (set-frame-parameter nil 'alpha '(85 40))))
- ;; 
-
-
-
-
-;; default to some transparenncy
-;; (set-frame-parameter (selected-frame) 'alpha '(85 50))
-;; (add-to-list 'default-frame-alist '(alpha 85 50))
- (set-frame-parameter (selected-frame) 'alpha '(100 100))
- (add-to-list 'default-frame-alist '(alpha 100 100))
 
 (set-face-background 'hl-line "#220") 
 (add-hook 'ruby-mode-hook (lambda () (local-set-key "\r" 'newline-and-indent)))
@@ -1278,18 +1186,6 @@ With arg, nukes first."
 (set-face-background 'hl-line "#111") 
 
 ;;(require 'inf-ruby);; creates a new function (run-ruby)
-
-;; redirect prompt string to google lucky
-(defun gll-region (&optional flags)
-  "Google the selected region"
-  (interactive)
-  (setq query (read-string "feeling lucky?: "))
-  (browse-url (concat "http://www.google.com/search?ie=utf-8&oe=utf-8&q=&btnI=I'm+Feeling+Lucky&aq=f&aqi=&aql=&oq=&gs_rfai=&q=" query)))
-
-;; press control-c g to google the selected region
-(global-set-key (kbd "C-c f") 'gll-region)
-
-
 
 ;; To convert a file that contains tabs and spaces to one that contains only spaces, use the untabify command: M-x untabify
 
