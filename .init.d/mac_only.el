@@ -79,3 +79,11 @@
        (global-font-lock-mode t)
        ;; Maximum colors
        (setq font-lock-maximum-decoration t))))
+
+;; opacity / transparency
+
+;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
+
+;; You can use the following snippet after you’ve set the alpha as above to assign a toggle to “C-c t”:
+
+(global-hl-line-mode 1) ;; cur line hilite

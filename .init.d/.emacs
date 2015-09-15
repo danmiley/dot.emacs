@@ -113,11 +113,14 @@ Null prefix argument turns off the mode."
 ;; (epa-file-enable)
 
 
-;; (load-file "~/home/dot.emacs.d/elpa/yaml-mode-0.0.5/yaml-mode.el")
-;; FIX THIS , SHOULDNT NEED A LOAD PATH
-;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d/elpa/yaml-mode-0.0.5" load-path))
-;; ;; (require 'yaml-mode)
-;; ;; (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+;; yaml
+
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.yaml$" . yaml-mode))
+
+;; markdown
+
+;; have a look here; http://aaronbedra.com/emacs.d/
 
 ;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d" load-path))
 ;;(require 'rvm)
@@ -384,16 +387,6 @@ Null prefix argument turns off the mode."
 	;; (push "/opt/local/bin" exec-path))
 
  
-;; opacity / transparency
-
-;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
-
-;; You can use the following snippet after you’ve set the alpha as above to assign a toggle to “C-c t”:
-
-(global-hl-line-mode 1) ;; cur line hilite
-
-
-
 ;; ;;    (load-file "~/Dropbox/home/dot.emacs.d/plugins/ibuffer-git/ibuffer-git.el")
   ;; (require 'ibuffer-git)
 
@@ -470,6 +463,12 @@ Null prefix argument turns off the mode."
 ;;     (list flymake-ruby-command-name (list "-c" local-file))))
 
 
+(setq flyspell-issue-welcome-flag nil)
+(if (eq system-type 'darwin)
+    (setq-default ispell-program-name "/usr/local/bin/aspell")
+  (setq-default ispell-program-name "/usr/bin/aspell"))
+(setq-default ispell-list-command "list")
+
 
 	;;	 live syntax error checking
 ;; I don't like the default colors :)
@@ -507,14 +506,27 @@ Null prefix argument turns off the mode."
 (global-set-key "\C-cs" 'ri-ruby-complete-symbol)
 (global-set-key "\C-ca" 'ri-ruby-show-args)
 
+(add-hook 'ruby-mode-hook
+	  (lambda ()
+	    (autopair-mode)))
+
+(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Vagrantfile" . ruby-mode))
+(add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
+(add-hook 'ruby-mode-hook (lambda () (local-set-key "\r" 'newline-and-indent)))
+
+
 
 ;; cycle through buffers with Ctrl-Tab (like Chrome/Firefox)
 (global-set-key (kbd "\C-cb") 'bury-buffer)
 (global-set-key (kbd "\C-cf") 'next-buffer)
 
-
 ;; tried but new snippet package didnt configure right, sticking to old setup for now. 
-
  (ignore-errors
 (add-to-list 'load-path
                    "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c")
@@ -582,18 +594,15 @@ Null prefix argument turns off the mode."
 ;; Backspacing an opening brace/quote autodeletes its pair.
 ;; Newline between newly-opened brace pairs open an extra indented line.
 ;; Autopair works well across all Emacs major-modes, deduces from the language's syntax table which characters to pair, skip or delete. It should work even with extensions that redefine such keys
-;; (load-file "~/Dropbox/home/dot.emacs.d/autopair.el")
 (require 'autopair)
-;; (autopair-global-mode) ;; enable autopair in all buffers 
 
 ;; only turn on the just for a few mods
 (defvar autopair-modes '(r-mode ruby-mode rspec-mode))
 (defun turn-on-autopair-mode () (autopair-mode 1))
 (dolist (mode autopair-modes) (add-hook (intern (concat (symbol-name mode) "-hook")) 'turn-on-autopair-mode))
 
+;; sessions
 
-
-;; (load-file "~/Dropbox/home/dot.emacs.d/session.el")
 (require 'session)
 (add-hook 'after-init-hook 'session-initialize)
 
@@ -650,9 +659,9 @@ Null prefix argument turns off the mode."
 ;;(autoload 'js2-mode "js2" nil t)
 ;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
-;; (load-file "~/Dropbox/home/dot.emacs.d/json-mode.el")
-;; (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+;; json
 
+(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
 (global-set-key (kbd "TAB") 'self-insert-command)
 
@@ -660,7 +669,8 @@ Null prefix argument turns off the mode."
 ;; this minimizes emacs win, avoid
 (global-set-key [(control z)]  nil)
 
- (color-theme-sanityinc-tomorrow-night)
+
+
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
@@ -1162,6 +1172,8 @@ With arg, nukes first."
 
 ;;(add-hook 'java-mode-hook 'a-java-mode-hook)
 
+(setq column-number-mode t)
+
 (setq c-tab-always-indent t)
 (setq c-indent-level 4)
 (setq c-continued-brace-offset 4)
@@ -1174,15 +1186,15 @@ With arg, nukes first."
 (setq tab-width  4)
 
 ; git hooks
-(require 'magit)
 (load-file "~/dot.emacs/.init.d/magit/magit.el")  
+(require 'magit)
+
 
 
 (eval-when-compile (require 'cl))
 
 
 (set-face-background 'hl-line "#220") 
-(add-hook 'ruby-mode-hook (lambda () (local-set-key "\r" 'newline-and-indent)))
 
 ;;(set-face-background 'highlight-current-line-face "light yellow")
 (set-face-background 'hl-line "#111") 
@@ -1202,6 +1214,8 @@ With arg, nukes first."
 ;; ;; (if window-system
 ;; ;;     (server-start)
 ;; ;; )
+
+ (color-theme-sanityinc-tomorrow-night)
 
 
 ;;-----------------------------------------------------------------------------
