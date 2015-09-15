@@ -29,7 +29,7 @@
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair yaml-mode org-mode yasnippet magit color-theme color-theme-sanityinc-solarized flycheck rinari thingatpt thingatpt+))
+(setq package-list '(autopair yaml-mode org yasnippet color-theme color-theme-sanityinc-solarized flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee  yasnippet))
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -45,9 +45,11 @@
   (package-refresh-contents))
 
 ;; install the missing packages
+ (ignore-errors
 (dolist (package package-list)
   (unless (package-installed-p package)
     (package-install package)))
+)
 
 ;; activate installed packages
 (package-initialize)
@@ -226,7 +228,7 @@ Null prefix argument turns off the mode."
 
 ;; ;; ido - rinari likes this
 (require 'ido)
-(ido-mode t);; but ido is hard to use, needs review
+(ido-mode nil);; but ido is hard to use, needs review
 
 (setq inhibit-splash-screen t) ;; no splash screen
 ;; (set-fringe-mode 3) ;; ou can put the following in your .emacs file to control the size of the fringe on the left and right:
@@ -553,7 +555,7 @@ Null prefix argument turns off the mode."
 (setq file-name-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 
-(setq inferior-lisp-program "java -cp /opt/local/share/java/clojure/lib/clojure.jar clojure.main")
+;; (setq inferior-lisp-program "java -cp /opt/local/share/java/clojure/lib/clojure.jar clojure.main")
 ;;(setq inferior-lisp-program "java -cp ~/home/src/clojure/clojure/clojure-1.2.0-master-SNAPSHOT.jar clojure.main")
 
 (add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
@@ -592,24 +594,21 @@ Null prefix argument turns off the mode."
 ;; Newline between newly-opened brace pairs open an extra indented line.
 ;; Autopair works well across all Emacs major-modes, deduces from the language's syntax table which characters to pair, skip or delete. It should work even with extensions that redefine such keys
 ;; (load-file "~/Dropbox/home/dot.emacs.d/autopair.el")
-;; (require 'autopair)
-;;(autopair-global-mode) ;; enable autopair in all buffers 
+(require 'autopair)
+;; (autopair-global-mode) ;; enable autopair in all buffers 
 
 ;; only turn on the just for a few mods
-   (defvar autopair-modes '(r-mode ruby-mode rspec-mode))
-  (defun turn-on-autopair-mode () (autopair-mode 1))
-  (dolist (mode autopair-modes) (add-hook (intern (concat (symbol-name mode) "-hook")) 'turn-on-autopair-mode))
+(defvar autopair-modes '(r-mode ruby-mode rspec-mode))
+(defun turn-on-autopair-mode () (autopair-mode 1))
+(dolist (mode autopair-modes) (add-hook (intern (concat (symbol-name mode) "-hook")) 'turn-on-autopair-mode))
 
 
 ;;(load-file "~/home/dot.emacs.d/rspec-mode/rspec-mode-bjorn.el")
 
-;; ;;load the path etc
-;; (load-file "~/Dropbox/home/dot.emacs.d/my-shell.el")
-
 
 ;; (load-file "~/Dropbox/home/dot.emacs.d/session.el")
-;; (require 'session)
-;; (add-hook 'after-init-hook 'session-initialize)
+(require 'session)
+(add-hook 'after-init-hook 'session-initialize)
 
 ;;(add-hook 'after-init-hook 'color-theme-twilight)
 
@@ -686,9 +685,7 @@ Null prefix argument turns off the mode."
 ;; this minimizes emacs win, avoid
 (global-set-key [(control z)]  nil)
 
-
- (load-theme (quote sanityinc-tomorrow-bright) nil nil)
-
+(load-theme (quote sanityinc-tomorrow-night) nil nil)
 
 ;; only if in its own window (not in a term, run the color scheme
 
