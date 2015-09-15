@@ -33,7 +33,7 @@
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair yaml-mode org color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode ))
+(setq package-list '(autopair yaml-mode org color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate))
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -308,9 +308,8 @@ Null prefix argument turns off the mode."
 ;; ;; (load-file "~/Dropbox/home/dot.emacs.d/thingatpt+.el")
 
 (add-hook 'c-mode-common-hook
-
-
 (lambda ()(setq c-hungry-delete-key t)))
+
 ;; enable global nungry delete
 (require 'cc-mode)    
 ;;(global-set-key (kbd "C-d") 'c-hungry-delete-forward)
@@ -1172,8 +1171,8 @@ With arg, nukes first."
 (setq tab-width  4)
 
 ; git hooks
-;; (require 'magit)
-;; ;; (load-file "~/Dropbox/home/dot.emacs.d/magit/magit.el")  
+(require 'magit)
+(load-file "~/dot.emacs/.init.d/magit/magit.el")  
 
 
 (eval-when-compile (require 'cl))
