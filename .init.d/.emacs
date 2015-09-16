@@ -20,6 +20,7 @@
 ;; some good stuff for 2015
 ;; http://crypt.codemancers.com/posts/2013-09-26-setting-up-emacs-as-development-environment-on-osx/
 ;; http://aaronbedra.com/emacs.d/
+;; https://justin.abrah.ms/dotfiles/emacs.html
 
 ;; load to enable faultless and direct read and save in encrpted format gz
 ;; ;; (ignore-errors
@@ -29,14 +30,16 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
- (ignore-errors
-  (load-file "~/dot.emacs/.init.d/bash_shell.el")
-  (load-file "~/dot.emacs/.init.d/mac_only.el")
- )
+(setq 'undo-outer-limit 100000000)
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair yaml-mode org color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate))
+(setq package-list '(autopair yaml-mode
+			      ;;
+			      org
+			      ;;
+			      color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate eshell
+			      ))
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -61,7 +64,7 @@
 (require 'cl)
 (defun bk-kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
-  (interactive "sKill buffers matching this regular expression: ")
+  (interactive "Kill buffers matching this regular expression: ")
   (flet ((kill-buffer-ask (buffer) (save-buffer buffer) (kill-buffer buffer)))
 ;;  (flet ((kill-buffer-ask (buffer)  (kill-buffer buffer)))
     (kill-matching-buffers regexp)))
@@ -102,8 +105,6 @@ Null prefix argument turns off the mode."
 ;;(add-to-list 'auto-mode-alist '("\\.gpg$" . sensitive-mode))
 (add-to-list 'auto-mode-alist '("\\.gpg\\'" . sensitive-mode))
 
-
-
 ;; password files should only be around 5 min or less; 1 hr max
 ;; (eval-expression (quote (run-at-time "5 min" 300 (quote (lambda nil (kill-buffer "home.gpg"))))) nil)
 (run-at-time "60 min" (* 60 60) (quote (lambda nil (bk-kill-buffers ".*.gpg"))))
@@ -112,7 +113,8 @@ Null prefix argument turns off the mode."
 (require 'epa-file)
 ;; (epa-file-enable)
 
-
+;;(require 'epa)
+;;  (setq epg-gpg-program "gpg")
 ;; yaml
 
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -122,25 +124,6 @@ Null prefix argument turns off the mode."
 
 ;; have a look here; http://aaronbedra.com/emacs.d/
 
-;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d" load-path))
-;;(require 'rvm)
-;; (rvm-use-default) ;; use rvm's default ruby for the current Emacs session
-
-
-;; run test on line
-(defun run-test-on-line (&optional flags)
-  "run rspec test on the given line"
-  (interactive)
-  (let (
-;; ;;	(default-directory "~/Dropbox/home/oz/oz_app4/oz_app/")
-	)
-	(setq this_file (buffer-file-name))
-	(setq this_line_number (substring (what-line) 5))  ;; cut off 	"Line "
-
-    (grep (concat "echo 'bundle exec rspec --drb  " buffer-file-name ":" this_line_number " | sed \"s/[      #]*//g\"' | bash --login" ))))
-;;    (grep (concat "echo 'bundle exec rspec --drb  " buffer-file-name  " | sed \"s/[      #]*//g\"' | bash --login" ))))
-;; press control-c g to google the selected region
-(global-set-key (kbd "C-c t") 'run-test-on-line)
 
 
 ;;  this way shell-commands will show ansi-color, elg.
@@ -157,33 +140,9 @@ Null prefix argument turns off the mode."
            (ansi-color-apply-on-region (point-min) (point-max))))))
 
 ;; 
-(defun my-ri-lookup()
-
-  (interactive)
-  (let* ((default (region-or-word-at-point))
-	 (term (read-string (format "Ruby docs for (%s): "      default) default)))
-    (let ((term (if (zerop(length term)) default term)))
-    (shell-command (concat "echo 'ri -f ansi " term  " ' | bash --login" )))))
-
-
-(global-set-key (kbd "C-c o") 'regenerate-ruby-docs)
-
-
-;; Account validate_settings
-;; to use, insertion point should be right after the function or Classname name, then do this:
-;; result page should show up in your default browser
-(global-set-key (kbd "C-c i") 'my-ri-lookup)
 
 ;; nice to see the looked up def in another window
 (global-set-key  [(meta .)] 'find-tag-other-window)
-
-;; regenerating documentation for the current buffer, eg:
-;; % rdoc -r app/models/account.rb
-(defun regenerate-ruby-docs ()
-  ""
-	  (interactive)				;this makes the function a  command too
-	(let* ((filezname  (buffer-file-name (current-buffer))))
-	 (shell-command (concat "echo 'rdoc -r " filezname " ' | bash --login" ))))
 
 
 ;; trial
@@ -229,9 +188,13 @@ Null prefix argument turns off the mode."
 	))
 
 ;; ;; ido - rinari likes this
-(require 'ido)
-(ido-mode nil);; but ido is hard to use, needs review
 
+(require 'ido)
+(ido-mode t) 
+(setq ido-enable-flex-matching t)
+(add-to-list 'ido-ignore-files "\\.pyc")
+
+;
 (setq inhibit-splash-screen t) ;; no splash screen
 ;; (set-fringe-mode 3) ;; ou can put the following in your .emacs file to control the size of the fringe on the left and right:
 
@@ -242,71 +205,8 @@ Null prefix argument turns off the mode."
   (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))  ;; no toolbar
   )
 
-;; (setq load-path (cons "~/home/dot.emacs.d/org-7.3/lisp" load-path))
-;; (setq load-path (cons "~/home/dot.emacs.d/org-7.3/contrib/lisp" load-path))
-;; (require 'org-install)
+;; One use of Auto-Revert mode is to “tail” a file such as a system log, so that changes made to that file by other programs are continuously displayed. To do this, just move the point to the end of the buffer, and it will stay there as the file contents change. However, if you are sure that the file will only change by growing at the end, use Auto-Revert Tail mode instead (auto-revert-tail-mode). It is more efficient for this. Auto-Revert Tail mode works also for remote files.
 
-;; (setq org-directory "~/home/dot.emacs.d/org-7.3")
-
-;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d/org-mode/lisp" load-path))
-;; ;; (setq load-path (cons "~/Dropbox/home/dot.emacs.d/org-mode/contrib/lisp" load-path))
-;; (require 'org-install)
-
-;; ;; (setq org-directory "~/Dropbox/home/dot.emacs.d/org-mode")
-
-;; ;; (require 'ox-confluence)
-
-;;(load-file "~/home/dot.emacs.d/p4.el")
-
-;; Set to the location of your Org files on your local system
-;; ;; (setq org-directory "~/Dropbox/home/org")
-;; ;; ;; Set to the name of the file where new notes will be stored
-;; ;; (setq org-mobile-inbox-for-pull "~/Dropbox/home/org/flagged.org")
-;; ;; ;; Set to <your Dropbox root directory>/MobileOrg.
-;; ;; (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-
-
-
-(setq org-todo-keywords (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!/!)")
- (sequence "WAITING(w@/!)" "SOMEDAY(s!)" "|" "CANCELLED(c@/!)")
- (sequence "QUOTE(q!)" "QUOTED(Q!)" "|" "APPROVED(A@)" "EXPIRED(E@)" "REJECTED(R@)")
- (sequence "OPEN(O)" "|" "CLOSED(C)"))))
-
-(setq org-todo-keyword-faces (quote (("TODO" :foreground "red" :weight bold)
- ("NEXT" :foreground "blue" :weight bold)
- ("DONE" :foreground "forest green" :weight bold)
- ("WAITING" :foreground "yellow" :weight bold)
- ("SOMEDAY" :foreground "goldenrod" :weight bold)
- ("CANCELLED" :foreground "orangered" :weight bold)
- ("QUOTE" :foreground "hotpink" :weight bold)
- ("QUOTED" :foreground "indianred1" :weight bold)
- ("APPROVED" :foreground "forest green" :weight bold)
- ("EXPIRED" :foreground "olivedrab1" :weight bold)
- ("REJECTED" :foreground "olivedrab" :weight bold)
- ("OPEN" :foreground "magenta" :weight bold)
- ("CLOSED" :foreground "forest green" :weight bold))))
-
-; Tags with fast selection keys
-(setq org-tag-alist (quote ((:startgroup)
-                            ("@errand" . ?e)
-                            ("@office" . ?o)
-                            ("@home" . ?h)
-                            ("@farm" . ?f)
-                            (:endgroup)
-                            ("PHONE" . ?P)
-                            ("QUOTE" . ?q)
-                            ("WAITING" . ?w)
-                            ("FARM" . ?F)
-                            ("HOME" . ?H)
-                            ("ORG" . ?O)
-                            ("NORANG" . ?N)
-                            ("crypt" . ?c)
-                            ("MARK" . ?M)
-                            ("NOTE" . ?n)
-                            ("CANCELLED" . ?C))))
-
-; Allow setting single tags without the menu
-(setq org-fast-tag-selection-single-key (quote expert))
 
 ;; auto-revert-mode  - if you tailling a file, this is handy
 
@@ -316,7 +216,7 @@ Null prefix argument turns off the mode."
 (add-hook 'c-mode-common-hook
 (lambda ()(setq c-hungry-delete-key t)))
 
-;; enable global nungry delete
+;; enable global hungry delete
 (require 'cc-mode)    
 ;;(global-set-key (kbd "C-d") 'c-hungry-delete-forward)
 ;;(global-set-key (kbd "DEL") 'c-hungry-delete-forward)
@@ -343,8 +243,7 @@ Null prefix argument turns off the mode."
 
 (global-set-key "\C-cn" 'minimize-frame)
 
- (setq ns-pop-up-frames nil) ;; this prevents extrnal apps like p4 or
-;; emacsclient from popping new frames
+ (setq ns-pop-up-frames nil) ;; this prevents extrnal apps like p4 or  emacsclient from popping new frames
 
 ;; google-region
 (defun google-region (&optional flags)
@@ -356,41 +255,17 @@ Null prefix argument turns off the mode."
 (global-set-key (kbd "C-c g") 'google-region)
 ;; google-region
 
-
 (auto-fill-mode nil)
-
-;; Org-mode settings
-(add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-c." 'org-do-promote)
-(global-set-key "\C-c<" 'org-demote)
-(global-font-lock-mode 1)
-
-(defun my-org-mode-startup ()
-  "Setup org mode so its useful."
-  (setq org-log-done t)
-  (setq org-odd-levels-only t)
-  (setq org-hide-leading-stars t))
-
-(add-hook 'org-mode-hook 'my-org-mode-startup)
-
 
 ;; this  doesnt work for me, (select deletes on type)
 ;; (delete-selection-mode nil)
 
-;; loading for mac only
-
-;;  Add in my paths
-;; (when (equal system-type 'darwin)
-	;; (setenv "PATH" (concat "/opt/local/bin:/usr/local/bin:" (getenv "PATH")))
-	;; (push "/opt/local/bin" exec-path))
 
  
 ;; ;;    (load-file "~/Dropbox/home/dot.emacs.d/plugins/ibuffer-git/ibuffer-git.el")
   ;; (require 'ibuffer-git)
 
-     (global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
 ;;     (autoload 'ibuffer "ibuffer" "List buffers." t)
 
 
@@ -409,18 +284,6 @@ Null prefix argument turns off the mode."
 ;;  '(ibuffer-git-column-length 8)
 ;; )
 
-
-;; Here are the keys in the minor mode.
-
-;; TAB       -- execute normal TAB command, if point doesn't move, try to
-;;              toggle the visibility of the block.
-;; <S-tab>   -- execute normal <S-tab command, if point doesn't move, try to
-;;              toggle the visibility of all the blocks.
-;; ;; (add-to-list 'load-path "~/Dropbox/home/dot.emacs.d/plugins/hideshow-org")
-;; ;; (require 'hideshow-org)
-;; ;; (global-set-key "\C-ch" 'hs-org/minor-mode)
-
-
 ;; allows use of alt arrow keys to navigate arround the buffer windows
 (require 'windmove)
 (windmove-default-keybindings 'meta)
@@ -429,10 +292,10 @@ Null prefix argument turns off the mode."
 (autoload 'linum-mode "linum" "toggle line numbers on/off" t) 
 (global-set-key (kbd "\C-cl") 'linum-mode)    
 
-;; highlight some keywords
-(font-lock-add-keywords 'ruby-mode
-'(("\\<\\(FIXME\\|HACK\\|XXX\\|FLUNK\\|TODO\\|ToDo\\)" 1 font-lock-warning-face prepend)))
+;; syntax checking
 
+(require 'flycheck)
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;(load-file "~/home/dot.emacs.d/flycheck-master/flycheck.el")
 ;; Let's run 8 checks at once instead.
@@ -469,56 +332,11 @@ Null prefix argument turns off the mode."
   (setq-default ispell-program-name "/usr/bin/aspell"))
 (setq-default ispell-list-command "list")
 
-
-	;;	 live syntax error checking
+;;	 live syntax error checking
 ;; I don't like the default colors :)
 ;;(set-face-background 'flymake-errline "red43")
 ;;(set-face-background 'flymake-warnline "dark slate blue")
 
-
-; ri fast ruby docs
-;; ;;  (setq ri-ruby-script "~/Dropbox/home/dot.emacs.d/plugins/ri-emacs.rb")
-;; ;; ;; (autoload 'ri "~/home/dot.emacs.d/plugins/ri-ruby.el" nil t);;
-;; ;;  (load-file "~/Dropbox/home/dot.emacs.d/plugins/ri-ruby.el")
-;;
-;;(defun create-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (eshell-command (format "find %s -type f -name \"*.[rb]\" | xargs etags -o -append" dir-name)))
-;;     M-.       goes to the symbol definition
-;;     M-0 M-.   goes to the next matching definition
-;;     M-*       return to your starting point
-;; One pretty annoying thing about ctags is that it only indexes declarations and definitions of symbols, not invocations. Fortunately emacs has a built-in workaround for this, called "tags-search". This is basically a grep that looks through all the source files mentioned in your TAGS file. It's fast, so you can pretty quickly zip through all the matches in your cbase:
-
-;;     M-x tags-search <type your regexp>       initiate a search
-;;     M-,                                      go to the next match
-
-
-(mapc (lambda (func)
-(autoload func "ri-ruby" nil t))
-'(ri ri-ruby-complete-symbol ri-ruby-show-args))
-
-;; this only works if ri-emacs can be found in your PATH
-(setq ri-ruby-script (locate-file "ri-emacs" exec-path))
-
-;; (add-hook 'ruby-mode-hook	
-;; 	(lambda ()	
-;; 	(local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)	
-;; 	(local-set-key (kbd "<f4>") 'ri-ruby-show-args)))
-
-(global-set-key "\C-cs" 'ri-ruby-complete-symbol)
-(global-set-key "\C-ca" 'ri-ruby-show-args)
-
-(add-hook 'ruby-mode-hook
-	  (lambda ()
-	    (autopair-mode)))
-
-(add-to-list 'auto-mode-alist '("\\.rake$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.gemspec$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("\\.ru$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Rakefile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Gemfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Capfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Vagrantfile" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Guardfile" . ruby-mode))
-(add-hook 'ruby-mode-hook (lambda () (local-set-key "\r" 'newline-and-indent)))
 
 ;; cycle through buffers with Ctrl-Tab (like Chrome/Firefox)
 (global-set-key (kbd "\C-cb") 'bury-buffer)
@@ -533,6 +351,18 @@ Null prefix argument turns off the mode."
     (yas/load-directory "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets")
     (yas-global-mode 1))
 
+
+;;As a workaround, you can redefine the Yasnippet expansion key instead, as explained in the FAQ:
+
+;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
+;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+;; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
+
+;; In this way, you use <C-tab> to expand Yasnippets and the TAB key for auto-complete-mode.
+
+;; Note:
+
+;; I also discovered that using <C-tab> to expand Yasnippets, instead of <tab>, had the advantage to make snippet expansion not interfer with indent-according-to-mode. For example: If I have a Lisp line: (ac-config-default) but it is not correctly indented, I usually press TAB to indent it correctly (using indent-according-to-mode). But if the cursor were between the a and c in (ac-config-default) it would instead have expanded the Lisp and-snippet (which is not desired here), to get the line ((and )c-config-default))..
 
 ;;	(yas/load-directory "~/home/dot.emacs.d/plugins/yasnippet-0.6.1c/snippets/text-mode/ruby-mode/shoulda-mode")
 ;; might break if not installed! ugh
@@ -646,13 +476,6 @@ Null prefix argument turns off the mode."
 
 (setq-default indent-tabs-mode t)
 
-;; toggle this, first 2 are rails style, 2nd 2 oz style
-
-;;(setq indent-tabs-mode t)
-;;(setq ruby-indent-level 2) ;
-(setq ruby-indent-tabs-mode t)
-(setq ruby-indent-level 8)
-
 ;; javascript and JS
 ;;(autoload 'js2-mode "js2" nil t)
 ;;(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
@@ -666,8 +489,6 @@ Null prefix argument turns off the mode."
 
 ;; this minimizes emacs win, avoid
 (global-set-key [(control z)]  nil)
-
-
 
 
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -718,15 +539,16 @@ Null prefix argument turns off the mode."
 ;;(load-file "~/dot.emacs.d/347_emacs_for_web_programmers.emacs")   ;;; this causes problems with dired, use with caustion
 
 
-;; (load "~/dot.emacs.d/nxml-mode-20041004/rng-auto.el")
-
+;; (defun create-tags (dir-name)
+;;   "Create tags file."
+;;   (interactive "DDirectory: ")
+;;   (shell-command
+;;    (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
+  
 
 ;; html
 
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-helper-mode))
-
-
-
 
 (setq auto-mode-alist
         (cons '("\\.\\(html\\\)\\'" . html-mode)
@@ -734,7 +556,6 @@ Null prefix argument turns off the mode."
 
 (setq auto-mode-alist
       (cons '("\\.html$" . html-mode) auto-mode-alist))
-
 
 ;; jump to and from specific places
 (autoload 'session-jump-to-last-change "session")
@@ -818,33 +639,6 @@ Null prefix argument turns off the mode."
       (replace-match withthat nil t))
     (buffer-substring (point-min) (point-max))))
 
-(defun flip_ruby ()
-  "flip ruby"
-	  (interactive)				;this makes the function a  command too
-	(if (string-match "_spec" (buffer-file-name (current-buffer)))
-				(find-file (string-replace-2 "/spec"  "/app" (string-replace-2 "_spec.rb" ".rb"(buffer-file-name (current-buffer)))))
-				(find-file (string-replace-2 "/app"  "/spec" (string-replace-2 ".rb" "_spec.rb"(buffer-file-name (current-buffer))))))
-	)
-(global-set-key [(control c) ?f] 'flip_ruby);; pending using a better offiical one
-
-;; ruby mode, test flip  go to test mode
-(global-set-key (kbd "\C-ct") 'flip_ruby)
-
-;; go to the model 
-(defun model_ruby ()
-  "opening-dot-emacs"
-	  (interactive)				;this makes the function a  command too
-	  (find-file (string-replace-2 "/controllers"  "/models" (string-replace-2 "s.rb" ".rb"(buffer-file-name (current-buffer)))))
-	)
-(global-set-key (kbd "\C-cm") 'model_ruby)
-
-;; go to the controller
-(defun controller_ruby ()
-  "opening-dot-emacs"
-	  (interactive)				;this makes the function a  command too
-	  (find-file (string-replace-2 "/models"  "/controllers" (string-replace-2 ".rb" "s.rb"(buffer-file-name (current-buffer)))))
-	)
-(global-set-key (kbd "\C-cc") 'controller_ruby)
 
 
 (global-set-key [(control x) ?,] 'next-error)
@@ -862,7 +656,7 @@ Null prefix argument turns off the mode."
 (global-set-key [f1] 'eval-region)
 (global-set-key [f2] 'open-dot-emacs)
 
-(global-set-key [f3] 'shell) 
+(global-set-key [f3] 'eshell) 
 (global-set-key [f4] 'indent-region)
 
 (global-set-key [f5] 'bury-buffer)
@@ -877,7 +671,6 @@ Null prefix argument turns off the mode."
 
 
 ;; split windows should display different buffers
-
 
 (global-set-key [(control x) \5] 'hsplit-window-switch-buffer)
 
@@ -904,25 +697,24 @@ Null prefix argument turns off the mode."
 ;;attributes of the faces, you can use the
 ;;following startup code to get started:
 
-
-(cond ((fboundp 'global-font-lock-mode)
-       ;; Customize face attributes
-       (setq font-lock-face-attributes
-             ;; Symbol-for-Face Foreground Background Bold Italic Underline
-             '((font-lock-comment-face "DarkGreen")
-               (font-lock-string-face "Sienna")
-               (font-lock-keyword-face "RoyalBlue")
-               (font-lock-function-name-face "Blue")
-               (font-lock-variable-name-face "Brown")
-               (font-lock-type-face "Brown")
-;;               (font-lock-reference-face "Purple")
-               ))
-       ;; Load the font-lock package.
-       (require 'font-lock)
-       ;; Maximum colors
-       (setq font-lock-maximum-decoration t)
-       ;; Turn on font-lock in all modes that support it
-       (global-font-lock-mode t)))
+;; (cond ((fboundp 'global-font-lock-mode)
+;;        ;; Customize face attributes
+;;        (setq font-lock-face-attributes
+;;              ;; Symbol-for-Face Foreground Background Bold Italic Underline
+;;              '((font-lock-comment-face "DarkGreen")
+;;                (font-lock-string-face "Sienna")
+;;                (font-lock-keyword-face "RoyalBlue")
+;;                (font-lock-function-name-face "Blue")
+;;                (font-lock-variable-name-face "Brown")
+;;                (font-lock-type-face "Brown")
+;; ;;               (font-lock-reference-face "Purple")
+;;                ))
+;;        ;; Load the font-lock package.
+;;        (require 'font-lock)
+;;        ;; Maximum colors
+;;        (setq font-lock-maximum-decoration t)
+;;        ;; Turn on font-lock in all modes that support it
+;;        (global-font-lock-mode t)))
 
 (transient-mark-mode t)
 (show-paren-mode 1)
@@ -1185,21 +977,16 @@ With arg, nukes first."
 (setq c-continued-brace-offset  0)
 (setq tab-width  4)
 
-; git hooks
+; git hooks, using old magit until can get 24.4 on ubuntu
 (load-file "~/dot.emacs/.init.d/magit/magit.el")  
 (require 'magit)
 
-
-
 (eval-when-compile (require 'cl))
 
-
-(set-face-background 'hl-line "#220") 
+;; (set-face-background 'hl-line "#220") 
 
 ;;(set-face-background 'highlight-current-line-face "light yellow")
-(set-face-background 'hl-line "#111") 
-
-;;(require 'inf-ruby);; creates a new function (run-ruby)
+;; (set-face-background 'hl-line "#111") 
 
 ;; To convert a file that contains tabs and spaces to one that contains only spaces, use the untabify command: M-x untabify
 
@@ -1215,8 +1002,19 @@ With arg, nukes first."
 ;; ;;     (server-start)
 ;; ;; )
 
+;; Type M-x desktop-clear to empty the Emacs desktop. This kills all buffers except for internal ones, and clears the global variables listed in desktop-globals-to-c
+(desktop-save-mode 1)
+
  (color-theme-sanityinc-tomorrow-night)
 
+ (ignore-errors
+  (load-file "~/dot.emacs/.init.d/bash_shell.el")
+  (load-file "~/dot.emacs/.init.d/mac_only.el")
+  (load-file "~/dot.emacs/.init.d/org_mode_settings.el")
+  (load-file "~/dot.emacs/.init.d/ruby_settings.el")
+  (load-file "~/dot.emacs/.init.d/eshell_settings.el")
+  (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
+ )
 
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.

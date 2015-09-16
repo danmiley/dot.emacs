@@ -113,3 +113,27 @@
 
 
 (set-frame-parameter nil 'alpha 0.9)
+
+;; loading for mac only
+
+;;  Add in my paths
+;; (when (equal system-type 'darwin)
+	;; (setenv "PATH" (concat "/opt/local/bin:/usr/local/bin:" (getenv "PATH")))
+	;; (push "/opt/local/bin" exec-path))
+
+
+;;Using Emacs from within the terminal in OSX completely breaks copy+paste support. This chunk of code from emacswiki restores it.
+
+
+(defun copy-from-osx ()
+  (shell-command-to-string "pbpaste"))
+
+(defun paste-to-osx (text &optional push)
+  (let ((process-connection-type nil))
+    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+(if (eq system-type 'darwin)
+    (progn
+      (setq interprogram-cut-function 'paste-to-osx)
+              (setq interprogram-paste-function 'copy-from-osx)))
