@@ -1,4 +1,4 @@
-;; -*-mode:Emacs-Lisp-*-
+n;; -*-mode:Emacs-Lisp-*-
 ;; Time-stamp: <2004-03-24 13:38:41
 ;;-----------------------------------------------------------------------------
 ;; Author    : Dan Miley
@@ -30,7 +30,7 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(setq 'undo-outer-limit 100000000)
+(setq undo-outer-limit 100000000)
 
 (require 'package) ;; You might already have this line
 
@@ -38,7 +38,12 @@
 			      ;;
 			      org
 			      ;;
-			      color-theme color-theme-sanityinc-tomorrow flycheck rinari thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate eshell
+			      color-theme color-theme-sanityinc-tomorrow 
+			      ;;
+			      flycheck
+			      rinari
+			      ;;
+			       thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate eshell
 			      ))
 
 (add-to-list 'package-archives
