@@ -64,10 +64,9 @@
 
 ;; toggle this, first 2 are rails style, 2nd 2 oz style
 
-;;(setq indent-tabs-mode t)
 ;;(setq ruby-indent-level 2) ;
-(setq ruby-indent-tabs-mode t)
-(setq ruby-indent-level 8)
+;;(setq ruby-indent-tabs-mode t)
+;;(setq ruby-indent-level 8)
 
 (defun flip_ruby ()
   "flip ruby"
