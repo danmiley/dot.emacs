@@ -9,10 +9,6 @@
 ;;             and you would not want that!!
 ;; Status    :
 ;;           o 
-;;           o TO DO : add the JDE java major dev mode at http://jdee.sunsite.dk/
-;;             Pcl-cvs - The Emacs Front-End to CVS
-;;           o AspectJ for Emacs v1.1b2: supports AspectJ 1.1, GNU
-;;           Emacs 20.7, XEmacs 21.4.3 and JDEE
 ;;           jdee.sunsite.dk/rootpage.html  = java dev environment
 ;;-----------------------------------------------------------------------------
 
@@ -21,12 +17,18 @@
 ;; http://crypt.codemancers.com/posts/2013-09-26-setting-up-emacs-as-development-environment-on-osx/
 ;; http://aaronbedra.com/emacs.d/
 ;; https://justin.abrah.ms/dotfiles/emacs.html
-
+;; http://reinvent.kinvey.com/h/i/26122732-emacs-fans-rejoice-datadog-mode-is-here
 ;; load to enable faultless and direct read and save in encrpted format gz
+;; https://github.com/timotheosh/aws-el
+
 ;; ;; (ignore-errors
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/lisp/jka-compr.elc")
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/jka-compr.elc")
 ;; ;;  )
+
+
+(setq user-full-name "Dan Miley")
+(setq user-mail-address "dan.miley@gmail.com")
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -38,7 +40,11 @@
 			      ;;
 			      org
 			      ;;
-			      color-theme color-theme-sanityinc-tomorrow 
+			      color-theme color-theme-sanityinc-tomorrow  twilight
+			      ;;
+			      docker
+			      docker-tramp
+			      dockerfile-mode
 			      ;;
 			      flycheck
 			      rinari
@@ -153,7 +159,7 @@ Null prefix argument turns off the mode."
 ;; trial
 (setq explicit-bash-args (list "--login" "--init-file" "/Users/dan/.profile" "-i"))
 
-(setq path "/opt/local/bin:/opt/local/sbin:/Users/dan/bin:/usr/local/git/bin/git:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin:/opt/local/bin:/opt/local/sbin:/Users/dan/.rvm/gems/ruby-1.9.2-p320/bin:/Users/dan/.rvm/gems/ruby-1.9.2-p320@global/bin:/Users/dan/.rvm/rubies/ruby-1.9.2-p320/bin:/Users/dan/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin/git:/usr/local/git/bin:/Users/dan/bin:/usr/X11/bin:/usr/local/mysql/bin:/Applications/MacPorts/Emacs.app/Contents/MacOS/bin:/Applications/MacPorts/Emacs.app/Contents/MacOS:/opt/local/var/scala/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/Users/dan/.rvm/bin")
+(setq path "/opt/local/bin:/opt/local/sbin:/Users/dan/bin:/usr/local/git/bin/git:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin:/opt/local/bin:/opt/local/sbin:/Users/dan/.rvm/gems/ruby-1.9.2-p320/bin:/Users/dan/.rvm/gems/ruby-1.9.2-p320@global/bin:/Users/dan/.rvm/rubies/ruby-1.9.2-p320/bin:/Users/dan/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin/git:/usr/local/git/bin:/Users/dan/bin:/usr/X11/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/Users/dan/.rvm/bin")
 (setenv "PATH" path)
 
 ;; (defun set-exec-path-from-shell-PATH ()
@@ -231,8 +237,7 @@ Null prefix argument turns off the mode."
 
 ;; (define-key function-key-map [delete] [deletechar])
 
-
-
+;; only to use with non term emacs
 (defun maximize-frame ()
   (interactive)
   (set-frame-position (selected-frame) 0 0)
@@ -250,23 +255,11 @@ Null prefix argument turns off the mode."
 
  (setq ns-pop-up-frames nil) ;; this prevents extrnal apps like p4 or  emacsclient from popping new frames
 
-;; google-region
-(defun google-region (&optional flags)
-  "Google the selected region"
-  (interactive)
-  (let ((query (buffer-substring (region-beginning) (region-end))))
-    (browse-url (concat "http://www.google.com/search?ie=utf-8&oe=utf-8&q=" query))))
-;; press control-c g to google the selected region
-(global-set-key (kbd "C-c g") 'google-region)
-;; google-region
-
 (auto-fill-mode nil)
 
 ;; this  doesnt work for me, (select deletes on type)
 ;; (delete-selection-mode nil)
 
-
- 
 ;; ;;    (load-file "~/Dropbox/home/dot.emacs.d/plugins/ibuffer-git/ibuffer-git.el")
   ;; (require 'ibuffer-git)
 
@@ -302,16 +295,6 @@ Null prefix argument turns off the mode."
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
-;;(load-file "~/home/dot.emacs.d/flycheck-master/flycheck.el")
-;; Let's run 8 checks at once instead.
-
-;; ;; flymake defaults to ruby 1.8.7, this is a hardcoded way to get it
-;; ;; to go over to 1.9 ruby syntax
-;; (load-file "~/home/dot.emacs.d/plugins/flymake-ruby.el")
-;; (if (file-exists-p "/Users/dan/.rvm/rubies/ruby-1.9.2-p290/bin/ruby")
-;;     (setq flymake-ruby-command-name "/Users/dan/.rvm/rubies/ruby-1.9.2-p290/bin/ruby")
-;;   (setq flymake-ruby-command-name "ruby"))
-
 ;;   (require 'flymake-ruby)
 ;;   (add-hook 'ruby-mode-hook
 ;;           '(lambda ()
@@ -330,6 +313,8 @@ Null prefix argument turns off the mode."
 ;;     ;; Invoke ruby with '-c' to get syntax checking
 ;;     (list flymake-ruby-command-name (list "-c" local-file))))
 
+
+;; brew install aspell
 
 (setq flyspell-issue-welcome-flag nil)
 (if (eq system-type 'darwin)
@@ -355,7 +340,6 @@ Null prefix argument turns off the mode."
     (yas/initialize)   ;; TODO
     (yas/load-directory "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets")
     (yas-global-mode 1))
-
 
 ;;As a workaround, you can redefine the Yasnippet expansion key instead, as explained in the FAQ:
 
@@ -388,28 +372,6 @@ Null prefix argument turns off the mode."
 
 (setq file-name-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
-
-;; (setq inferior-lisp-program "java -cp /opt/local/share/java/clojure/lib/clojure.jar clojure.main")
-;;(setq inferior-lisp-program "java -cp ~/home/src/clojure/clojure/clojure-1.2.0-master-SNAPSHOT.jar clojure.main")
-
-(add-to-list 'auto-mode-alist '("\\.clj$" . clojure-mode))
-(add-hook 'slime-mode-hook
-          (lambda ()
-            (setq slime-truncate-lines nil)
-            (slime-redirect-inferior-output)))
-
-;; rich hickey
-
-;; (setq swank-clojure-jar-path "~/home/src/clojuret/clojure/clojure-1.2.0-master-SNAPSHOT.jar")
-
-;; (require 'clojure-mode)
-;;  (load-file "~/home/src/clojure/clojure/swank-clojure/swank-clojure.el")
-;; (require 'swank-clojure-autoload)
-;; (require 'slime)
-
-;; (eval-after-load "slime" (slime-setup '(slime-repl)))
-;; (slime-setup)
-
 
   ;;mode-compile
  ;; ;; (load-file "~/Dropbox/home/dot.emacs.d/mode-compile.el")
@@ -471,13 +433,9 @@ Null prefix argument turns off the mode."
                                  (forward-line 1))))
              ))
 
-;; (require 'git)
 
 
 ;; end trial
-
-(setq user-full-name "Dan Miley")
-(setq user-mail-address "dan.miley@gmail.com")
 
 (setq-default indent-tabs-mode t)
 
@@ -591,6 +549,8 @@ Null prefix argument turns off the mode."
 ;; (your configuration files _must_ be in this directory):
 ;;(setq startup-directory "C:/cygwin/home/Administrator/")
 
+;; http://emacswiki.org/emacs/GenericMode
+
 ;; generic-x.el is a standard package with Emacs 21.  It contains some 
 ;; very neat little modes, such as a JavaScript mode (but said mode
 ;; is not yet as good as c-mode for JavaScript, for it does not 
@@ -598,16 +558,8 @@ Null prefix argument turns off the mode."
 ;; All modes supported by generic-x.el are automatically applied
 ;; unless overridden below (for example, JavaScript mode is overridden 
 ;; below).
-;;(require 'generic-x)
+(require 'generic-x)
 
-;;(add-to-list 'generic-extras-enable-list 'javascript-generic-mode)
-
-;; (setq auto-mode-alist
-;;      (cons '("\\.js$" . javascript-generic-mode) auto-mode-alist))
-
-; Indent c code four spaces
-
-(setq c-basic-offset 4)
 
 ; Associate c-mode with the .js extension
 
@@ -621,19 +573,9 @@ Null prefix argument turns off the mode."
 
 
 ;; ---------------------------------------------------------------------------
-;; activate Python mode 
-;; available at: http://www.python.org/emacs/python-mode/
-;; ---------------------------------------------------------------------------
-(setq auto-mode-alist
-      (cons '("\\.py$" . python-mode) auto-mode-alist))
-(setq interpreter-mode-alist
-      (cons '("python" . python-mode)
-            interpreter-mode-alist))
-(autoload 'python-mode "python-mode" "Python editing mode." t)
-
-;; ---------------------------------------------------------------------------
 ;; top levels
 ;; ---------------------------------------------------------------------------
+
 ;;  grep shortcuts---------------------------------------------------------------------------
 (defun string-replace-2 (this withthat in)
   "replace THIS with WITHTHAT' in the string IN"
@@ -681,19 +623,6 @@ Null prefix argument turns off the mode."
 
 ;; #########################3  # from 347_web programmers
 
-;; (setq shell-mode-hook 'my-shell-setup)
-
-;; ;; #########################3
-;; (defun my-shell-setup ()
-;;   "For bash (cygwin 18) under Emacs 20"
-;;   (setq comint-scroll-show-maximum-output 'this)
-;;   (setq comint-completion-addsuffix t)
-;;   ;; (setq comint-process-echoes t) ;; reported   that this is no longer needed
-;;   (setq comint-eol-on-send t)
-;;   (make-variable-buffer-local
-;;    'comint-completion-addsuffix))
-
-
 (setq process-coding-system-alist (cons '("bash" . raw-text-unix)
 					process-coding-system-alist))
 
@@ -740,33 +669,6 @@ Null prefix argument turns off the mode."
 
 
 ;;{{{ Script creation and debugging
-
-;;{{{ make-perl-script
-
-(defun make-perl-script (arg)
-  "Make the current buffer into a perl script.
-With arg, nukes first."
-  (interactive "*P")
-  (cond
-   ((or arg (= (- (point-min) (point-max)) 0))
-    (erase-buffer)
-    (insert-file "~/bin/debug.pl")))
-  (save-excursion
-    (shell-command (concat "chmod +x "
-			   (buffer-file-name))))
-  (if (search-forward "gud-perldb-history: " nil
-		      t)
-      (insert (concat "(\"perl "
-                      (file-name-nondirectory
-		       (buffer-file-name))
-                      "\")")))
-  (save-buffer)
-  (shell-command (concat "chmod a+x "
-			 (buffer-file-name)))
-  (find-alternate-file (buffer-file-name)) ;; set  mode, fontification, etc.
-  (beginning-of-buffer)
-  (search-forward "usage=\"Usage: $0 \[-$flags\]"
-		  nil t))
 
 
 ;; selective yanking (see selective-yank below)
@@ -950,27 +852,11 @@ With arg, nukes first."
     (widen)))
 
 
-(defun java-mode-setup ()
-;;  (c-set-style "java")
-;;  (define-key java-mode-map (kbd "RET") 'c-newline-and-perhaps-comment)
-;;  (setq comment-line-break-function 'c-newline-and-perhaps-comment)
-;;  (turn-on-auto-fill)
-;;  (setq fill-column 76)
-;;  (define-key java-mode-map (kbd "C-c S") 'c-insert-seperating-comment)
-;;  (define-key java-mode-map (kbd "C-c L") 'c-insert-line-comment)
-;;  (c-set-offset 'func-decl-cont '++)
-;;  (setq c-tab-always-indent nil)
-)
-
-;; ;;(defun a-java-mode-hook ()
-;; ;; ;;  (setq tab-width 4)
-;; ;;  (setq-default c-basic-offset 4)
-;)
-
-;;(add-hook 'java-mode-hook 'a-java-mode-hook)
 
 (setq column-number-mode t)
 
+; Indent c code four spaces
+(setq c-basic-offset 4)
 (setq c-tab-always-indent t)
 (setq c-indent-level 4)
 (setq c-continued-brace-offset 4)
@@ -982,6 +868,9 @@ With arg, nukes first."
 (setq c-continued-brace-offset  0)
 (setq tab-width  4)
 
+;; magit 
+
+;; (require 'git)
 ; git hooks, using old magit until can get 24.4 on ubuntu
 (load-file "~/dot.emacs/.init.d/magit/magit.el")  
 (require 'magit)
@@ -1003,14 +892,15 @@ With arg, nukes first."
 ;; ;; (server-mode)
 
 ;; allow for use of emacsclient
-;; ;; (if window-system
-;; ;;     (server-start)
-;; ;; )
+;; (if window-system
+;;     (server-start)
+;; )
 
 ;; Type M-x desktop-clear to empty the Emacs desktop. This kills all buffers except for internal ones, and clears the global variables listed in desktop-globals-to-c
 (desktop-save-mode 1)
 
- (color-theme-sanityinc-tomorrow-night)
+(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
+;;  (color-theme-sanityinc-tomorrow-night)
 
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
@@ -1021,6 +911,15 @@ With arg, nukes first."
   (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
  )
 
+
+;; tramp
+
+;;http://www.emacswiki.org/emacs/TrampMode
+;;http://stackoverflow.com/questions/28484460/using-emacs-on-aws-ubuntu-system-meta-and-esc-keys-dont-work
+(require 'tramp)
+(setq tramp-default-method "ssh")
+;;  C-x C-f /remotehost:filename  RET (or /method:user@remotehost:filename)
+;;  (find-file "/ssh:dmiley@ec2-54-69-139-242.us-west-2.compute.amazonaws.com:")
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.
 ;;-----------------------------------------------------------------------------
