@@ -48,6 +48,12 @@
 			      ;;
 			      flycheck
 			      rinari
+
+			      ;; compa
+;;			      company
+;;			      company-inf-ruby
+			      rvm
+			      
 			      ;;
 			       thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate eshell
 			      ))
@@ -501,13 +507,79 @@ Null prefix argument turns off the mode."
 ;;(load-file "~/dot.emacs.d/python-mode.el") 
 ;;(load-file "~/dot.emacs.d/347_emacs_for_web_programmers.emacs")   ;;; this causes problems with dired, use with caustion
 
+;; real deal for rails/padrino
+;; ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS
 
-;; (defun create-tags (dir-name)
-;;   "Create tags file."
-;;   (interactive "DDirectory: ")
-;;   (shell-command
-;;    (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
-  
+(defun create-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (eshell-command (format "ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS" dir-name)))
+;;     M-.       goes to the symbol definition
+;;     M-0 M-.   goes to the next matching definition
+;;     M-*       return to your starting point
+;; One pretty annoying thing about ctags is that it only indexes declarations and definitions of symbols, not invocations. Fortunately emacs has a built-in workaround for this, called "tags-search". This is basically a grep that looks through all the source files mentioned in your TAGS file. It's fast, so you can pretty quickly zip through all the matches in your cbase:
+
+;;     M-x tags-search <type your regexp>       initiate a search
+;;     M-,                                      go to the next match
+(defun visit-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (visit-tags-table(concat dir-name "TAGS" )))
+
+
+
+(defun build-ctags (dir-name)
+  (interactive)
+  (message "building project tags")
+  (let ((root (file-name-directory dir-name)))
+    (shell-command (concat "ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f " root "TAGS " root)))
+  (visit-project-tags)
+  (message "tags built successfully"))
+
+(defun visit-project-tags (dir-name)
+  (interactive)
+  (let ((tags-file (concat (eproject-root) "TAGS")))
+    (visit-tags-table tags-file)
+    (message (concat "Loaded " tags-file))))
+
+
+  ;;;  Auto refresh of the tags file
+
+  ;;;  Jonas.Jarnestrom<at>ki.ericsson.se A smarter               
+  ;;;  find-tag that automagically reruns etags when it cant find a               
+  ;;;  requested item and then makes a new try to locate it.                      
+  ;;;  Fri Mar 15 09:52:14 2002    
+
+  (defadvice find-tag (around refresh-etags activate)
+   "Rerun etags and reload tags if tag not found and redo find-tag.              
+   If buffer is modified, ask about save before running etags."
+  (let ((extension (file-name-extension (buffer-file-name))))
+    (condition-case err
+    ad-do-it
+      (error (and (buffer-modified-p)
+          (not (ding))
+          (y-or-n-p "Buffer is modified, save it? ")
+          (save-buffer))
+         (er-refresh-etags extension)
+         ad-do-it))))
+
+  (defun er-refresh-etags (&optional extension)
+  "Run etags on all peer files in current dir and reload them silently."
+  (interactive)
+  (shell-command (format "etags *.%s" (or extension ".rb")))
+  (let ((tags-revert-without-query t))  ; don't query, revert silently          
+    (visit-tags-table default-directory nil)))
+ 
+
+
+(setq path-to-ctags "/usr/local/bin/ctags")
+
+ (defun create-tags (dir-name)
+   "Create tags file."
+   (interactive "DDirectory: ")
+   (shell-command
+    (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
+
+(defun create-etags (dir-name)
+  "Create tags file."
+  (interactive "DDirectory: ")
+  (eshell-command
+   (format "find %sx -type f -name \"*.[ch]\" | etags -" dir-name)))
+
 
 ;; html
 
@@ -760,7 +832,7 @@ Null prefix argument turns off the mode."
   (setq found t)
   (cond
      ; local directories
-     ((looking-at ".src") (setq directory "c:/usr/dmiley/src/"))
+     ((looking-at ".app") (setq directory "~"))
      ((looking-at ".pul") (setq directory "c:/usr/dmiley/src/pulse/"))
      ((looking-at ".pxs") (setq directory "c:/usr/dmiley/src/pulse/main/clients/ria/thirdparty/PxScript/PxScript/"))
      (t (setq found nil)))
@@ -899,8 +971,6 @@ Null prefix argument turns off the mode."
 ;; Type M-x desktop-clear to empty the Emacs desktop. This kills all buffers except for internal ones, and clears the global variables listed in desktop-globals-to-c
 (desktop-save-mode 1)
 
-(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
-;;  (color-theme-sanityinc-tomorrow-night)
 
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
@@ -909,6 +979,7 @@ Null prefix argument turns off the mode."
   (load-file "~/dot.emacs/.init.d/ruby_settings.el")
   (load-file "~/dot.emacs/.init.d/eshell_settings.el")
   (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
+  (load-file "~/dot.emacs/.init.d/cloudformation-mode.el")
  )
 
 
@@ -920,6 +991,34 @@ Null prefix argument turns off the mode."
 (setq tramp-default-method "ssh")
 ;;  C-x C-f /remotehost:filename  RET (or /method:user@remotehost:filename)
 ;;  (find-file "/ssh:dmiley@ec2-54-69-139-242.us-west-2.compute.amazonaws.com:")
+
+
+;; theme performance can vary on diff env's. (doesn't seem to work inside tmux for instance)
+(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
+;;  (color-theme-sanityinc-tomorrow-night)
+
+
+;; company mode.  this is working but heavy rails dependency to date (and pry in Gemfile) read setu
+
+;; (global-company-mode t)
+
+;; (add-hook 'ruby-mode-hook 'robe-mode)
+
+;; (push 'company-robe company-backends)
+;; (eval-after-load 'company
+;;     '(push 'company-robe company-backends))
+
+;;(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
+;;    (rvm-activate-corresponding-ruby))
+
+(rvm-activate-corresponding-ruby)
+
+;; (add-hook 'robe-mode-hook 'ac-robe-setup)
+
+(with-eval-after-load 'flycheck
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+
+;; https://github.com/dgutov/robe  some good docs
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.
 ;;-----------------------------------------------------------------------------
