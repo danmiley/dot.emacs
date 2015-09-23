@@ -1,3 +1,6 @@
+(require 'thingatpt+)
+	
+
 ;; highlight some keywords
 (font-lock-add-keywords 'ruby-mode
 '(("\\<\\(FIXME\\|HACK\\|XXX\\|FLUNK\\|TODO\\|ToDo\\)" 1 font-lock-warning-face prepend)))
@@ -17,9 +20,9 @@
 
 
 
-; ri fast ruby docs
-;; ;;  (setq ri-ruby-script "~/Dropbox/home/dot.emacs.d/plugins/ri-emacs.rb")
-;; ;; ;; (autoload 'ri "~/home/dot.emacs.d/plugins/ri-ruby.el" nil t);;
+; ri fast ruby docs , obsolete : https://github.com/pedz/ri-emacs
+;; (setq ri-ruby-script "~/Dropbox/home/dot.emacs.d/plugins/ri-emacs.rb")
+;; (autoload 'ri "~/home/dot.emacs.d/plugins/ri-ruby.el" nil t);;
 ;; ;;  (load-file "~/Dropbox/home/dot.emacs.d/plugins/ri-ruby.el")
 ;;
 ;;(defun create-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (eshell-command (format "find %s -type f -name \"*.[rb]\" | xargs etags -o -append" dir-name)))
@@ -32,20 +35,42 @@
 ;;     M-,                                      go to the next match
 
 
-(mapc (lambda (func)
-(autoload func "ri-ruby" nil t))
-'(ri ri-ruby-complete-symbol ri-ruby-show-args))
+;;  add the following to your init.el, replacing the filenames with
+;;  their correct locations:
+;;
+;;  (setq ri-ruby-script "~/Dropbox/home/dot.emacs.d/plugins/ri-emacs.rb")
+;;  (autoload 'ri "~/Dropbox/home/dot.emacs.d/plugins/ri-ruby.el" nil t)
+;;
+;;  You may want to bind the ri command to a key.
+;;  For example to bind it to F1 in ruby-mode:
+;;  Method/class completion is also available.
+;;
+  ;; (add-hook 'ruby-mode-hook (lambda ()
+  ;;                             (local-set-key 'f1 'ri)
+  ;;                             (local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)
+  ;;                             (local-set-key 'f4 'ri-ruby-show-args)
+  ;;                             ))
 
-;; this only works if ri-emacs can be found in your PATH
-(setq ri-ruby-script (locate-file "ri-emacs" exec-path))
 
-;; (add-hook 'ruby-mode-hook	
-;; 	(lambda ()	
-;; 	(local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)	
-;; 	(local-set-key (kbd "<f4>") 'ri-ruby-show-args)))
+;; (mapc (lambda (func)
+;; (autoload func "ri-ruby" nil t))
+;; '(ri ri-ruby-complete-symbol ri-ruby-show-args))
 
-(global-set-key "\C-cs" 'ri-ruby-complete-symbol)
-(global-set-key "\C-ca" 'ri-ruby-show-args)
+;; ;; this only works if ri-emacs can be found in your PATH
+;; (setq ri-ruby-script (locate-file "ri-emacs" exec-path))
+
+;; ;; (add-hook 'ruby-mode-hook	
+;; ;; 	(lambda ()	
+;; ;; 	(local-set-key "\M-\C-i" 'ri-ruby-complete-symbol)	
+;; ;; 	(local-set-key (kbd "<f4>") 'ri-ruby-show-args)))
+
+;; (global-set-key "\C-cs" 'ri-ruby-complete-symbol)
+;; (global-set-key "\C-ca" 'ri-ruby-show-args)
+
+;; 2015 sept - yari seems broken too. old.
+;; (require 'yari)
+;; (defun ri-bind-key ()
+;;   (local-set-key [f1] 'yari))
 
 (add-hook 'ruby-mode-hook
 	  (lambda ()
@@ -67,6 +92,9 @@
 ;;(setq ruby-indent-level 2) ;
 ;;(setq ruby-indent-tabs-mode t)
 ;;(setq ruby-indent-level 8)
+
+;;(add-hook 'ruby-mode-hook 'eldoc-mode)
+
 
 (defun flip_ruby ()
   "flip ruby"
@@ -97,7 +125,6 @@
 (global-set-key (kbd "\C-cc") 'controller_ruby)
 
 (defun my-ri-lookup()
-
   (interactive)
   (let* ((default (region-or-word-at-point))
 	 (term (read-string (format "Ruby docs for (%s): "      default) default)))

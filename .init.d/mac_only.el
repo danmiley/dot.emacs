@@ -1,3 +1,5 @@
+;; http://puntoblogspot.blogspot.com/2014/01/ann-helm-dash-documentation-browser-for.html
+
 (defun mac-string-to-utxt (string &optional coding-system)
       (or coding-system (setq coding-system mac-system-coding-system))
       (let (data encoding)
@@ -48,8 +50,6 @@
 
 ;; emacs transparency
 
-
-
 ;; makes emacs see through or not
 ;; form of (%viewing %background)
 (defun toggle-transparency ()
@@ -77,15 +77,21 @@
  ;;     (set-frame-parameter nil 'alpha '(85 40))))
  ;; 
 
-
-
-
 ;; default to some transparenncy
 ;; (set-frame-parameter (selected-frame) 'alpha '(85 50))
 ;; (add-to-list 'default-frame-alist '(alpha 85 50))
  (set-frame-parameter (selected-frame) 'alpha '(100 100))
  (add-to-list 'default-frame-alist '(alpha 100 100))
 
+;; redirect prompt string to google lucky
+(defun gll-word-at-point (&optional flags)
+  "Google the selected region"
+  (interactive)
+  (let* ((default (region-or-word-at-point))
+	 (query (read-string (format "Feeling Lucky? (%s): "  default) default)))
+  (browse-url (concat "http://www.google.com/search?ie=utf-8&oe=utf-8&q=&btnI=I'm+Feeling+Lucky&aq=f&aqi=&aql=&oq=&gs_rfai=&q=" query))))
+
+(global-set-key (kbd "C-c w") 'gll-word-at-point)
 
 ;; redirect prompt string to google lucky
 (defun gll-region (&optional flags)
@@ -93,6 +99,7 @@
   (interactive)
   (setq query (read-string "feeling lucky?: "))
   (browse-url (concat "http://www.google.com/search?ie=utf-8&oe=utf-8&q=&btnI=I'm+Feeling+Lucky&aq=f&aqi=&aql=&oq=&gs_rfai=&q=" query)))
+
 
 ;; press control-c g to google the selected region
 (global-set-key (kbd "C-c f") 'gll-region)
@@ -111,7 +118,6 @@
 
 ;; You can use the following snippet after you’ve set the alpha as above to assign a toggle to “C-c t”:
 
-
 (set-frame-parameter nil 'alpha 0.9)
 
 ;; loading for mac only
@@ -121,23 +127,9 @@
 	;; (setenv "PATH" (concat "/opt/local/bin:/usr/local/bin:" (getenv "PATH")))
 	;; (push "/opt/local/bin" exec-path))
 
-
 ;;Using Emacs from within the terminal in OSX completely breaks copy+paste support. This chunk of code from emacswiki restores it.
 
-
-(defun copy-from-osx ()
-  (shell-command-to-string "pbpaste"))
-
-(defun paste-to-osx (text &optional push)
-  (let ((process-connection-type nil))
-    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
-      (process-send-string proc text)
-      (process-send-eof proc))))
-(if (eq system-type 'darwin)
-    (progn
-      (setq interprogram-cut-function 'paste-to-osx)
-              (setq interprogram-paste-function 'copy-from-osx)))
-
+;; xclip for coy/paste
 ;; google-region
 (defun google-region (&optional flags)
   "Google the selected region"
@@ -147,3 +139,49 @@
 ;; press control-c g to google the selected region
 (global-set-key (kbd "C-c g") 'google-region)
 ;; google-region
+
+;; load-url-region
+;; http://www.adobe.com
+(defun load-url-region (&optional flags)
+  "open a web browser with the selected region"
+  (interactive)
+  (let ((query (buffer-substring (region-beginning) (region-end))))
+    (browse-url (concat "" query))))
+;; press control-c g to google the selected region
+(global-set-key (kbd "C-c l") 'load-url-region)
+
+(defun yank-chrome-url ()
+  "Yank current URL from Chrome"
+  (interactive)
+  (require 'apples-mode)
+    (apples-do-applescript "tell application \"Google Chrome\"
+ get URL of active tab of first window
+end tell"
+			   #'(lambda (url status script)
+			       ;; comes back with quotes which we strip off
+			       (insert (subseq url 1 (1- (length url)))))))
+
+
+
+;;Well, here is a little hack that lets you launch arbitrary files from a Dired view of a directory; using the operating system's registered application; ie, if you navigate to a .pdf file and hit 'l', Acrobat (or whatever) will launch and show you the file. Now I never have to use the accursed Finder. Works on Mac OS X and Ubuntu; might need modifcations for other systems.
+;;; Hack dired to launch files with 'l' key.  Put this in your ~/.emacs file
+
+(defun dired-launch-command ()
+  (interactive)
+  (dired-do-shell-command
+   (case system-type
+     (gnu/linux "gnome-open") ;right for gnome (ubuntu), not for other systems
+     (darwin "open"))
+   nil
+   (dired-get-marked-files t current-prefix-arg)))
+
+
+(setq dired-load-hook
+      (function
+       (lambda ()
+	 ;; Load extras:
+	;; (load "dired-x")
+	 ;; How to define your own key bindings:
+	 (define-key dired-mode-map " " 'scroll-up)
+	                   (define-key dired-mode-map "r" 'dired-launch-command))))
+

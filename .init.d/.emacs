@@ -20,7 +20,7 @@
 ;; http://reinvent.kinvey.com/h/i/26122732-emacs-fans-rejoice-datadog-mode-is-here
 ;; load to enable faultless and direct read and save in encrpted format gz
 ;; https://github.com/timotheosh/aws-el
-
+;; https://codehunk.wordpress.com/2009/06/27/emacs-repo-for-ruby-webapps/
 ;; ;; (ignore-errors
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.3/share/emacs/24.3/lisp/jka-compr.elc")
 ;; ;;  (load-file "/usr/local/Cellar/emacs/24.5/share/emacs/24.5/lisp/jka-compr.elc")
@@ -48,15 +48,23 @@
 			      ;;
 			      flycheck
 			      rinari
-
+			       apples-mode
 			      ;; compa
 ;;			      company
 ;;			      company-inf-ruby
 			      rvm
 			      
 			      ;;
-			       thingatpt thingatpt+ session rspec-mode fixmee json-mode textmate eshell
+			      thingatpt ;; thingatpt+  (can't get + to work as an install, manual load for now)
+			      session rspec-mode fixmee json-mode textmate eshell
+			      xclip
 			      ))
+
+
+;; mac only packages
+;;   dash-functional
+;;   date-at-point
+;; apples-mode
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -258,6 +266,7 @@ Null prefix argument turns off the mode."
   (set-frame-size (selected-frame) 80 40))
 
 (global-set-key "\C-cn" 'minimize-frame)
+
 
  (setq ns-pop-up-frames nil) ;; this prevents extrnal apps like p4 or  emacsclient from popping new frames
 
@@ -510,11 +519,15 @@ Null prefix argument turns off the mode."
 ;; real deal for rails/padrino
 ;; ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS
 
-(defun create-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (eshell-command (format "ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS" dir-name)))
+;; this is ad'hoc excluded set to keep the TAGS file from gettin too big
+(defun create-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (eshell-command (format "ctags -e -R --extra=+fq --exclude=chef --exclude=vendor --exclude=scout --exclude=imagecore  --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS" dir-name)))
 ;;     M-.       goes to the symbol definition
 ;;     M-0 M-.   goes to the next matching definition
 ;;     M-*       return to your starting point
 ;; One pretty annoying thing about ctags is that it only indexes declarations and definitions of symbols, not invocations. Fortunately emacs has a built-in workaround for this, called "tags-search". This is basically a grep that looks through all the source files mentioned in your TAGS file. It's fast, so you can pretty quickly zip through all the matches in your cbase:
+
+;; meta-return should comlpete the tag if it is unique
+(global-set-key "\M-\r" 'complete-tag)
 
 ;;     M-x tags-search <type your regexp>       initiate a search
 ;;     M-,                                      go to the next match
@@ -579,6 +592,11 @@ Null prefix argument turns off the mode."
   (interactive "DDirectory: ")
   (eshell-command
    (format "find %sx -type f -name \"*.[ch]\" | etags -" dir-name)))
+
+
+;; Prevent emacs from adding the encoding line at the top of the file
+(setq ruby-insert-encoding-magic-comment nil)
+
 
 
 ;; html
@@ -776,6 +794,10 @@ Null prefix argument turns off the mode."
       (if (> errors 0)
           (message (format "%d files were unreadable." errors))))))
 
+;; fast path to dired, right where you are
+(defun dired-here()   (interactive) (dired "." nil) )
+(global-set-key "\C-ce" 'dired-here)
+
 ;; Define an easy way to move up in a dired directory, 
 ;; To instantly view a file in the web browser (IE or whatever) (this needs a current directory argument to work better):
 ;; **NOTE: These bindings must be in a mode-hook, since dired isn't automatically
@@ -963,7 +985,7 @@ Null prefix argument turns off the mode."
 ;; will load that to the end
 ;; ;; (server-mode)
 
-;; allow for use of emacsclient
+;; allow for use of emacsclient, if using window emais
 ;; (if window-system
 ;;     (server-start)
 ;; )
@@ -971,18 +993,27 @@ Null prefix argument turns off the mode."
 ;; Type M-x desktop-clear to empty the Emacs desktop. This kills all buffers except for internal ones, and clears the global variables listed in desktop-globals-to-c
 (desktop-save-mode 1)
 
-
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
-  (load-file "~/dot.emacs/.init.d/mac_only.el")
   (load-file "~/dot.emacs/.init.d/org_mode_settings.el")
   (load-file "~/dot.emacs/.init.d/ruby_settings.el")
-  (load-file "~/dot.emacs/.init.d/eshell_settings.el")
+  (load-file "~/dot.emacs/.init.d/eshell_setup.el")
   (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
-  (load-file "~/dot.emacs/.init.d/cloudformation-mode.el")
+;;  (load-file "~/dot.emacs/.init.d/cloudformation-mode.el")
+  (load-file "~/dot.emacs/.init.d/thingatpt+.el")
+  (load-file "~/dot.emacs/.init.d/omnifocus.el")
  )
 
+;; mac only load ups
+(when (equal system-type 'darwin)
+ (ignore-errors
+  (load-file "~/dot.emacs/.init.d/mac_only.el")
+))
 
+;; omnifocus
+(autoload 'send-region-to-omnifocus "omnifocus-capture" "Send region to OmniFocus" t)
+(global-set-key (kbd "C-c C-o") 'send-region-to-omnifocus)
+;
 ;; tramp
 
 ;;http://www.emacswiki.org/emacs/TrampMode
@@ -1015,10 +1046,46 @@ Null prefix argument turns off the mode."
 
 ;; (add-hook 'robe-mode-hook 'ac-robe-setup)
 
+;; should disable flychecks of the documentation
 (with-eval-after-load 'flycheck
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
+(setq default-major-mode 'text-mode)
+
+;; show current function in modeline
+(which-func-mode t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;			F U N C T I O N S
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;ASCII table function
+(defun ascii-table ()
+  "Print the ascii table. Based on a defun by Alex Schroeder <asc@bsiag.com>"
+  (interactive)  (switch-to-buffer "*ASCII*")  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))  (let ((i 0))
+								 (while (< i 254)      (setq i (+ i 1))
+									(insert (format "%4d %c\n" i i))))  (beginning-of-buffer))
+
+(require 'xclip)
+
+(require 'docker)
+(require 'docker-tramp)
+(require 'dockerfile-mode)
+
+
 ;; https://github.com/dgutov/robe  some good docs
+
+
+
+;; Display time in the mode line
+;; Put this line last to prove (by the time in the mode line) 
+;; that the .emacs loaded without error to this point.
+(setq display-time-day-and-date t )
+;(setq display-time-24hr-format t)
+(display-time)
+
+
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.
 ;;-----------------------------------------------------------------------------
