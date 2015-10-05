@@ -1,6 +1,15 @@
 # dot.emacs
 std emacs configuration across os's
 
+NEW:
+ruby
+c-c i - doc lookup
+c-c d - 'dash' app doc lookup
+
+;;IDO mode is awesome. It's essential to know the basic shortcuts, especially the escape hatch Ctrl-f (introduction-to-ido-mode/) which gets you out of ido-mode.
+IDO mode dired : 'c-c d'
+
+
 TODO/BLOCKED:
 Magit 0.7 is hard installed until emacs 24.4 is avail on ubuntu
 

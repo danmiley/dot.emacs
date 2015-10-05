@@ -176,6 +176,7 @@ end tell"
    (dired-get-marked-files t current-prefix-arg)))
 
 
+;; view the file
 (setq dired-load-hook
       (function
        (lambda ()
@@ -183,5 +184,13 @@ end tell"
 	;; (load "dired-x")
 	 ;; How to define your own key bindings:
 	 (define-key dired-mode-map " " 'scroll-up)
-	                   (define-key dired-mode-map "r" 'dired-launch-command))))
+	 (define-key dired-mode-map "v" 'dired-launch-command))))
+
+;;https://github.com/stanaka/dash-at-point
+
+(autoload 'dash-at-point "dash-at-point"
+  "Search the word at point with Dash." t nil)
+(global-set-key "\C-cd" 'dash-at-point)
+(global-set-key "\C-ce" 'dash-at-point-with-docset)
+
 

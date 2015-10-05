@@ -49,6 +49,7 @@
 			      flycheck
 			      rinari
 			       apples-mode
+			      find-file-in-project
 			      ;; compa
 ;;			      company
 ;;			      company-inf-ruby
@@ -534,7 +535,6 @@ Null prefix argument turns off the mode."
 (defun visit-tags (dir-name) "Create tags file." (interactive "DDirectory: ") (visit-tags-table(concat dir-name "TAGS" )))
 
 
-
 (defun build-ctags (dir-name)
   (interactive)
   (message "building project tags")
@@ -557,41 +557,41 @@ Null prefix argument turns off the mode."
   ;;;  requested item and then makes a new try to locate it.                      
   ;;;  Fri Mar 15 09:52:14 2002    
 
-  (defadvice find-tag (around refresh-etags activate)
-   "Rerun etags and reload tags if tag not found and redo find-tag.              
-   If buffer is modified, ask about save before running etags."
-  (let ((extension (file-name-extension (buffer-file-name))))
-    (condition-case err
-    ad-do-it
-      (error (and (buffer-modified-p)
-          (not (ding))
-          (y-or-n-p "Buffer is modified, save it? ")
-          (save-buffer))
-         (er-refresh-etags extension)
-         ad-do-it))))
+  ;; (defadvice find-tag (around refresh-etags activate)
+  ;;  "Rerun etags and reload tags if tag not found and redo find-tag.              
+  ;;  If buffer is modified, ask about save before running etags."
+  ;; (let ((extension (file-name-extension (buffer-file-name))))
+  ;;   (condition-case err
+  ;;   ad-do-it
+  ;;     (error (and (buffer-modified-p)
+  ;;         (not (ding))
+  ;;         (y-or-n-p "Buffer is modified, save it? ")
+  ;;         (save-buffer))
+  ;;        (er-refresh-etags extension)
+  ;;        ad-do-it))))
 
-  (defun er-refresh-etags (&optional extension)
-  "Run etags on all peer files in current dir and reload them silently."
-  (interactive)
-  (shell-command (format "etags *.%s" (or extension ".rb")))
-  (let ((tags-revert-without-query t))  ; don't query, revert silently          
-    (visit-tags-table default-directory nil)))
+  ;; (defun er-refresh-etags (&optional extension)
+  ;; "Run etags on all peer files in current dir and reload them silently."
+  ;; (interactive)
+  ;; (shell-command (format "etags *.%s" (or extension ".rb")))
+  ;; (let ((tags-revert-without-query t))  ; don't query, revert silently          
+  ;;   (visit-tags-table default-directory nil)))
  
 
 
 (setq path-to-ctags "/usr/local/bin/ctags")
 
- (defun create-tags (dir-name)
-   "Create tags file."
-   (interactive "DDirectory: ")
-   (shell-command
-    (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
+;;  (defun create-tags (dir-name)
+;;    "Create tags file."
+;;    (interactive "DDirectory: ")
+;;    (shell-command
+;;     (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
 
-(defun create-etags (dir-name)
-  "Create tags file."
-  (interactive "DDirectory: ")
-  (eshell-command
-   (format "find %sx -type f -name \"*.[ch]\" | etags -" dir-name)))
+;; (defun create-etags (dir-name)
+;;   "Create tags file."
+;;   (interactive "DDirectory: ")
+;;   (eshell-command
+;;    (format "find %sx -type f -name \"*.[ch]\" | etags -" dir-name)))
 
 
 ;; Prevent emacs from adding the encoding line at the top of the file
@@ -635,10 +635,6 @@ Null prefix argument turns off the mode."
 (add-hook 'comint-output-filter-functions
 	  'comint-strip-ctrl-m)
 
-;; Set start-up directory with cygwin nomenclature 
-;; (your configuration files _must_ be in this directory):
-;;(setq startup-directory "C:/cygwin/home/Administrator/")
-
 ;; http://emacswiki.org/emacs/GenericMode
 
 ;; generic-x.el is a standard package with Emacs 21.  It contains some 
@@ -660,6 +656,7 @@ Null prefix argument turns off the mode."
   (interactive)				;this makes the function a  command too
   (find-file "~/dot.emacs/.init.d/.emacs")
   )
+(global-set-key [f2] 'open-dot-emacs)
 
 
 ;; ---------------------------------------------------------------------------
@@ -691,7 +688,7 @@ Null prefix argument turns off the mode."
 (global-set-key [(control \c)(control \c)] 'comment-region)
 
 (global-set-key [f1] 'eval-region)
-(global-set-key [f2] 'open-dot-emacs)
+
 
 (global-set-key [f3] 'eshell) 
 (global-set-key [f4] 'indent-region)
@@ -796,7 +793,7 @@ Null prefix argument turns off the mode."
 
 ;; fast path to dired, right where you are
 (defun dired-here()   (interactive) (dired "." nil) )
-(global-set-key "\C-ce" 'dired-here)
+(global-set-key "\C-cD" 'dired-here)
 
 ;; Define an easy way to move up in a dired directory, 
 ;; To instantly view a file in the web browser (IE or whatever) (this needs a current directory argument to work better):
@@ -804,7 +801,7 @@ Null prefix argument turns off the mode."
 ;; loaded on startup and so it's keymap is void until you go into dired. 
 (add-hook `dired-mode-hook
   `(lambda ()
-     (define-key dired-mode-map "\C-w" 'dired-up-directory)
+     (define-key dired-mode-map "\C-u" 'dired-up-directory)
      (define-key dired-mode-map "\C-b" 'browse-url)))
 
 ;; Display time in the mode line
@@ -830,12 +827,6 @@ Null prefix argument turns off the mode."
   (insert-file-contents "~/dot.emacs.d/templates/function.cpp.emacs"))
 
 (global-set-key [f6] 'insert-function-comment)
-
-;; ################################################## fine!
-;;(message (concat "Ready to run as of " 
-;;                 (time-stamp-mon-dd-yyyy) ", " (time-stamp-hh:mm:ss)))
-
-;; maximize the window for win 
 
 ;; page up and down already treated
 (global-set-key [kp-home]  'beginning-of-buffer) ; [Home]
@@ -1067,16 +1058,29 @@ Null prefix argument turns off the mode."
 								 (while (< i 254)      (setq i (+ i 1))
 									(insert (format "%4d %c\n" i i))))  (beginning-of-buffer))
 
+
 (require 'xclip)
 
 (require 'docker)
 (require 'docker-tramp)
 (require 'dockerfile-mode)
 
-
 ;; https://github.com/dgutov/robe  some good docs
 
+;;A Dockerfile mode for emacs
 
+;; (add-to-list 'load-path "/your/path/to/dockerfile-mode/")
+
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+;;Adds syntax highlighting as well as the ability to build the image directly (C-c C-b) from the buffer.
+
+;;You can specify the image name in the file itself by adding a line like this at the top of your Dockerfile.
+
+;; ## -*- docker-image-name: "your-image-name-here" -*-
+;; If you don't, you'll be prompted for an image name each time you build.
+
+;; https://github.com/Silex/docker.el
 
 ;; Display time in the mode line
 ;; Put this line last to prove (by the time in the mode line) 
