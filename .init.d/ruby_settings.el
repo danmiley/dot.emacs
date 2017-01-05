@@ -95,6 +95,16 @@
 
 ;;(add-hook 'ruby-mode-hook 'eldoc-mode)
 
+;; some hard sets for emacs 25 good ruby behavior
+
+
+(setq ruby-indent-tabs-mode t)
+(setq-default indent-tabs-mode t)
+(setq enh-ruby-indent-tabs-mode t)
+(setq electric-indent-mode nil)
+(global-set-key (kbd "RET") 'newline-and-indent)
+
+
 
 (defun flip_ruby ()
   "flip ruby"
