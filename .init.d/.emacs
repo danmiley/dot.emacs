@@ -46,7 +46,6 @@
 			      docker-tramp
 			      dockerfile-mode
 			      ;;
-			      flycheck
 			      rinari
 			       apples-mode
 			      find-file-in-project
@@ -308,8 +307,8 @@ Null prefix argument turns off the mode."
 
 ;; syntax checking
 
-(require 'flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
+;; (require 'flycheck)
+;; (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;   (require 'flymake-ruby)
 ;;   (add-hook 'ruby-mode-hook
@@ -414,8 +413,8 @@ Null prefix argument turns off the mode."
 
 ;; sessions
 
-(require 'session)
-(add-hook 'after-init-hook 'session-initialize)
+;;(require 'session)
+;;(add-hook 'after-init-hook 'session-initialize)
 
 ;;(add-hook 'after-init-hook 'color-theme-twilight)
 
@@ -1033,13 +1032,13 @@ Null prefix argument turns off the mode."
 ;;(defadvice inf-ruby-console-auto (before activate-rvm-for-robe activate)
 ;;    (rvm-activate-corresponding-ruby))
 
-(rvm-activate-corresponding-ruby)
+;; (;rvm-activate-corresponding-ruby)
 
 ;; (add-hook 'robe-mode-hook 'ac-robe-setup)
 
 ;; should disable flychecks of the documentation
-(with-eval-after-load 'flycheck
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+;;(with-eval-after-load 'flycheck
+;;    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
 (setq default-major-mode 'text-mode)
 
@@ -1089,6 +1088,8 @@ Null prefix argument turns off the mode."
 ;(setq display-time-24hr-format t)
 (display-time)
 
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
 
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.
