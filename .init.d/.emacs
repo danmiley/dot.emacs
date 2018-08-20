@@ -1000,6 +1000,11 @@ Null prefix argument turns off the mode."
   (load-file "~/dot.emacs/.init.d/mac_only.el")
 ))
 
+;; do github gists here  https://github.com/defunkt/gist.el
+
+(add-to-list 'load-path "~/.emacs.d/vendor/gist.el")
+(require 'gist)
+
 ;; omnifocus
 (autoload 'send-region-to-omnifocus "omnifocus-capture" "Send region to OmniFocus" t)
 (global-set-key (kbd "C-c C-o") 'send-region-to-omnifocus)
@@ -1090,6 +1095,7 @@ Null prefix argument turns off the mode."
 
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
+
 
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.

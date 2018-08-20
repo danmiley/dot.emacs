@@ -14,7 +14,7 @@
 (setq eshell-cmpl-dir-ignore "\\`\\(\\.\\.?\\|CVS\\|\\.svn\\|\\.git\\)/\\'")
 
 ; can't write over prompt, that would be weird
-(setq comint-prompt-read-only)
+(setq comint-prompt-read-only nil)
 
 ; scroll to bottom on output, more like a terminal
 (setq eshell-scroll-to-bottom-on-output t)

@@ -160,31 +160,31 @@ end tell"
 			   #'(lambda (url status script)
 			       ;; comes back with quotes which we strip off
 			       (insert (subseq url 1 (1- (length url)))))))
-
+(global-set-key (kbd "C-c y") 'yank-chrome-url)
 
 
 ;;Well, here is a little hack that lets you launch arbitrary files from a Dired view of a directory; using the operating system's registered application; ie, if you navigate to a .pdf file and hit 'l', Acrobat (or whatever) will launch and show you the file. Now I never have to use the accursed Finder. Works on Mac OS X and Ubuntu; might need modifcations for other systems.
 ;;; Hack dired to launch files with 'l' key.  Put this in your ~/.emacs file
 
-(defun dired-launch-command ()
-  (interactive)
-  (dired-do-shell-command
-   (case system-type
-     (gnu/linux "gnome-open") ;right for gnome (ubuntu), not for other systems
-     (darwin "open"))
-   nil
-   (dired-get-marked-files t current-prefix-arg)))
+;; (defun dired-launch-command ()
+;;   (interactive)
+;;   (dired-do-shell-command
+;;    (case system-type
+;;      (gnu/linux "gnome-open") ;right for gnome (ubuntu), not for other systems
+;;      (darwin "open"))
+;;    nil
+;;    (dired-get-marked-files t current-prefix-arg)))
 
 
-;; view the file
-(setq dired-load-hook
-      (function
-       (lambda ()
-	 ;; Load extras:
-	;; (load "dired-x")
-	 ;; How to define your own key bindings:
-	 (define-key dired-mode-map " " 'scroll-up)
-	 (define-key dired-mode-map "v" 'dired-launch-command))))
+;; ;; view the file
+;; (setq dired-load-hook
+;;       (function
+;;        (lambda ()
+;; 	 ;; Load extras:
+;; 	;; (load "dired-x")
+;; 	 ;; How to define your own key bindings:
+;; 	 (define-key dired-mode-map " " 'scroll-up)
+;; 	 (define-key dired-mode-map "l" 'dired-launch-command))))
 
 ;;https://github.com/stanaka/dash-at-point
 
@@ -193,4 +193,18 @@ end tell"
 (global-set-key "\C-cd" 'dash-at-point)
 (global-set-key "\C-ce" 'dash-at-point-with-docset)
 
+
+;;Ensure dired-launch is enabled in dired-mode:
+
+(define-key dired-launch-mode-map (kbd "l") 'dired-launch-command)
+
+(dired-launch-enable)
+
+;; Open files in dired mode using 'open'  -k on key -z in dired
+(eval-after-load "dired"
+  '(progn
+     (define-key dired-mode-map (kbd "z")
+       (lambda () (interactive)
+         (let ((fn (dired-get-file-for-visit)))
+           (start-process "default-app" nil "open" fn))))))
 
