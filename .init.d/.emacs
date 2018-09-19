@@ -986,11 +986,11 @@ Null prefix argument turns off the mode."
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
   (load-file "~/dot.emacs/.init.d/org_mode_settings.el")
-  (load-file "~/dot.emacs/.init.d/ruby_settings.el")
   (load-file "~/dot.emacs/.init.d/eshell_setup.el")
   (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
 ;;  (load-file "~/dot.emacs/.init.d/cloudformation-mode.el")
   (load-file "~/dot.emacs/.init.d/thingatpt+.el")
+  (load-file "~/dot.emacs/.init.d/ruby_settings.el")
   (load-file "~/dot.emacs/.init.d/omnifocus.el")
  )
 
@@ -1020,7 +1020,7 @@ Null prefix argument turns off the mode."
 
 
 ;; theme performance can vary on diff env's. (doesn't seem to work inside tmux for instance)
-(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
+;;(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
 ;;  (color-theme-sanityinc-tomorrow-night)
 
 

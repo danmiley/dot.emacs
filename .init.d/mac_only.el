@@ -208,3 +208,11 @@ end tell"
          (let ((fn (dired-get-file-for-visit)))
            (start-process "default-app" nil "open" fn))))))
 
+;; ;; Set default font
+;; (set-face-attribute 'default nil
+;;                     :family "Source Code Pro"
+;;                     :height 110
+;;                     :weight 'normal
+;;                     :width 'normal)
+;; (add-to-list 'default-frame-alist
+;;              '(font . "Source Code Pro"))

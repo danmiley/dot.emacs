@@ -142,13 +142,11 @@
     (shell-command (concat "echo 'ri -f ansi " term  " ' | bash --login" )))))
 
 
-(global-set-key (kbd "C-c o") 'regenerate-ruby-docs)
-
-;; Account validate_settings
 ;; to use, insertion point should be right after the function or Classname name, then do this:
 ;; result page should show up in your default browser
 (global-set-key (kbd "C-c i") 'my-ri-lookup)
 
+(global-set-key (kbd "C-c o") 'regenerate-ruby-docs)
 
 ;;(require 'inf-ruby);; creates a new function (run-ruby)
 ;; (add-to-list 'auto-mode-alist '("\\.rb\\'" . flycheck-mode))
