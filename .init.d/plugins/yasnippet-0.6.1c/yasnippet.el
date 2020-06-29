@@ -1534,7 +1534,7 @@ Here's the default value for all the parameters:
       (insert ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;\n")
       (insert "(defun yas/initialize-bundle ()\n"
               "  \"Initialize YASnippet and load snippets in the bundle.\"")
-      (flet ((yas/define-snippets
+      (flet-cl ((yas/define-snippets
               (mode snippets &optional parent-or-parents)
               (insert ";;; snippets for " (symbol-name mode) "\n")
               (let ((literal-snippets (list)))
@@ -2356,7 +2356,7 @@ With optional string TEXT do it in that string."
   "Sort the fields of SNIPPET in navigation order."
   (setf (yas/snippet-fields snippet)
         (sort (yas/snippet-fields snippet)
-              '(lambda (field1 field2)
+              #'(lambda (field1 field2)
                  (yas/snippet-field-compare field1 field2)))))
 
 (defun yas/snippet-field-compare (field1 field2)
@@ -3016,7 +3016,7 @@ Returns the newly created snippet."
 
 This is according to their relative positions in the buffer, and
 has to be called before the $-constructs are deleted."
-  (flet ((yas/fom-set-next-fom (fom nextfom)
+  (flet-cl ((yas/fom-set-next-fom (fom nextfom)
                                (cond ((yas/field-p fom)
                                       (setf (yas/field-next fom) nextfom))
                                      ((yas/mirror-p fom)

@@ -1,0 +1,79 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Mon Jun 29 14:25:15 2020
+;; Desktop file format version 208
+;; Emacs version 26.3
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (24314 23611 380453 0) (desktop . "208") "dmiley@dan-catalina-mbp.local" nil nil ((((minibuffer . t) (tty-type . "xterm-256color") (tty . "/dev/tty") (display-type . color) (background-mode . light) (foreground-color . "unspecified-fg") (alpha . 0.9) (menu-bar-lines . 0) (frameset--id . "D748-9537-701B-206C") (frameset--mini t) (background-color . "unspecified-bg") (font . "tty") (height . 37) (width . 155) (modeline . t) (unsplittable)) ((min-height . 8) (min-width . 10) (min-height-ignore . 4) (min-width-ignore . 2) (min-height-safe . 2) (min-width-safe . 2) (min-pixel-height . 8) (min-pixel-width . 10) (min-pixel-height-ignore . 4) (min-pixel-width-ignore . 2) (min-pixel-height-safe . 2) (min-pixel-width-safe . 2)) vc (pixel-width . 155) (pixel-height . 36) (total-width . 155) (total-height . 36) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 155) (pixel-height . 18) (total-width . 155) (total-height . 18) (normal-height . 0.5) (normal-width . 1.0) (buffer "gist.el" (selected . t) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 nil) (vscroll . 0) (dedicated) (point . 1549) (start . 1415))) (leaf (last . t) (pixel-width . 155) (pixel-height . 18) (total-width . 155) (total-height . 18) (normal-height . 0.5) (normal-width . 1.0) (buffer "*Backtrace*" (selected) (hscroll . 0) (fringes 0 0 nil) (margins nil) (scroll-bars nil 0 t nil 0 nil) (vscroll . 0) (dedicated) (point . 279) (start . 1)))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("gh-api" "gist" "dot"))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("~/dot.emacs/.init.d/desktop/" "/Users/dmiley/dot.emacs/.init.d/vendor/gist.el" "~" "~/dot.emacs/.init.d/desktop/" "~/dot.emacs/.init.d/desktop" "/Users/dmiley/dot.emacs/.init.d/vendor/gist.el" "~/dot.emacs/.init.d/vendor" "~" "/Users/dmiley/dot.emacs/.init.d/.emacs"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "/Users/dmiley/dot.emacs/.init.d/vendor/gist.el"
+  "gist.el"
+  'emacs-lisp-mode
+  '(eldoc-mode yas/minor-mode)
+  1549
+  '(1 nil)
+  nil
+  nil
+  '((buffer-display-time 24314 23599 838175 0) (buffer-file-coding-system . utf-8-unix))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/Users/dmiley/dot.emacs/.init.d/.emacs"
+  ".emacs"
+  'emacs-lisp-mode
+  '(eldoc-mode yas/minor-mode)
+  38009
+  '(37944 t)
+  nil
+  nil
+  '((buffer-display-time 24314 23022 130373 0) (buffer-file-coding-system . utf-8-dos))
+  '((mark-ring (38009 37944 37954 38009 37944 38009 37944 1))))
+
+(desktop-create-buffer 208
+  nil
+  ".init.d"
+  'dired-mode
+  nil
+  245
+  '(nil nil)
+  t
+  '("/Users/dmiley/dot.emacs/.init.d/")
+  '((buffer-display-time 24314 22882 856908 0))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  nil
+  "dot.emacs"
+  'dired-mode
+  nil
+  465
+  '(nil nil)
+  t
+  '("/Users/dmiley/dot.emacs/")
+  '((buffer-display-time 24314 22880 245049 0))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  nil
+  "dmiley"
+  'dired-mode
+  nil
+  2968
+  '(299 nil)
+  t
+  '("/Users/dmiley/")
+  '((buffer-display-time 24314 22876 613371 0))
+  '((mark-ring nil)))
+

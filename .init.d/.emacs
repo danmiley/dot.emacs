@@ -90,7 +90,7 @@
 (defun bk-kill-buffers (regexp)
   "Kill buffers matching REGEXP without asking for confirmation."
   (interactive "Kill buffers matching this regular expression: ")
-  (flet ((kill-buffer-ask (buffer) (save-buffer buffer) (kill-buffer buffer)))
+  (flet-cl ((kill-buffer-ask (buffer) (save-buffer buffer) (kill-buffer buffer)))
 ;;  (flet ((kill-buffer-ask (buffer)  (kill-buffer buffer)))
     (kill-matching-buffers regexp)))
 
@@ -1002,7 +1002,7 @@ Null prefix argument turns off the mode."
 
 ;; do github gists here  https://github.com/defunkt/gist.el
 
-(add-to-list 'load-path "~/.emacs.d/vendor/gist.el")
+(load-file "~/dot.emacs/.init.d/vendor/gist.el")
 (require 'gist)
 
 ;; omnifocus
