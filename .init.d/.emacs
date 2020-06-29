@@ -61,10 +61,6 @@
 			      ))
 
 
-;; mac only packages
-;;   dash-functional
-;;   kdate-at-point
-;; apples-mode
 
 (add-to-list 'package-archives
 	     '("melpa" . "http://melpa.org/packages/"))
@@ -149,10 +145,8 @@ Null prefix argument turns off the mode."
 
 ;; have a look here; http://aaronbedra.com/emacs.d/
 
-
-
 ;;  this way shell-commands will show ansi-color, elg.
-;; (shell-command "echo 'ri -f ansi Account' | bash --login " nil nil)
+;; (shell-command "echo 'ri -f ansi Enumerable' | bash --login " nil nil)
 
 (require 'ansi-color)
 
@@ -509,12 +503,10 @@ Null prefix argument turns off the mode."
 ;; And then (color-theme-twilight) to activate it.
 ;;
 
-;;(load-file "~/dot.emacs.d/fixme.el")   ;; colors the tags used to indicate what should be fixed(load-file "~/dot.emacs.d/python-mode.el")
-;;(load-file "~/dot.emacs.d/SteveAckermann.emacs")
-;;(load-file "~/dot.emacs.d/superbracket.el") 
-;;(load-file "~/dot.emacs.d/KilianAFoth.emacs")   ;; colors the tags used to indicate what should be fixed
-;;(load-file "~/dot.emacs.d/python-mode.el") 
-;;(load-file "~/dot.emacs.d/347_emacs_for_web_programmers.emacs")   ;;; this causes problems with dired, use with caustion
+;;(load-file "~/dot.emacs/SteveAckermann.emacs")  ;; very PC specikfic
+;;(load-file "~/dot.emacs/KilianAFoth.emacs")   ;; colors the tags used to indicate what should be fixed
+;;(load-file "~/dot.emacs/python-mode.el") 
+;;(load-file "~/dot.emacs/347_emacs_for_web_programmers.emacs")   ;;; this causes problems with dired, use with caustion
 
 ;; real deal for rails/padrino
 ;; ctags -e -R --extra=+fq --exclude=db --exclude=test --exclude=.git --exclude=public -f TAGS
@@ -586,11 +578,11 @@ Null prefix argument turns off the mode."
 ;;    (shell-command
 ;;     (format "find %s -name '*.mp4' | xargs %s -a -o %s/TAGS" dir-name '/usr/local/bin/etags' dir-name)))
 
-;; (defun create-etags (dir-name)
-;;   "Create tags file."
-;;   (interactive "DDirectory: ")
-;;   (eshell-command
-;;    (format "find %sx -type f -name \"*.[ch]\" | etags -" dir-name)))
+ (defun create-etags (dir-name)
+  "Create tags file."
+   (interactive "DDirectory: ")
+   (eshell-command
+    (format "find %s -type f -name \"*.[ch]\" | etags -" dir-name)))
 
 
 ;; Prevent emacs from adding the encoding line at the top of the file
@@ -988,28 +980,12 @@ Null prefix argument turns off the mode."
   (load-file "~/dot.emacs/.init.d/bash_shell.el")
   (load-file "~/dot.emacs/.init.d/org_mode_settings.el")
   (load-file "~/dot.emacs/.init.d/eshell_setup.el")
-  (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")
 ;;  (load-file "~/dot.emacs/.init.d/cloudformation-mode.el")
   (load-file "~/dot.emacs/.init.d/thingatpt+.el")
   (load-file "~/dot.emacs/.init.d/ruby_settings.el")
-  (load-file "~/dot.emacs/.init.d/omnifocus.el")
  )
 
-;; mac only load ups
-(when (equal system-type 'darwin)
- (ignore-errors
-  (load-file "~/dot.emacs/.init.d/mac_only.el")
-))
 
-;; do github gists here  https://github.com/defunkt/gist.el
-
-(load-file "~/dot.emacs/.init.d/vendor/gist.el")
-(require 'gist)
-
-;; omnifocus
-(autoload 'send-region-to-omnifocus "omnifocus-capture" "Send region to OmniFocus" t)
-(global-set-key (kbd "C-c C-o") 'send-region-to-omnifocus)
-;
 ;; tramp
 
 ;;http://www.emacswiki.org/emacs/TrampMode
@@ -1022,8 +998,8 @@ Null prefix argument turns off the mode."
 
 ;; theme performance can vary on diff env's. (doesn't seem to work inside tmux for instance)
 ;;(load-theme 'twilight t)  ;; textmate twilight, ignore lisp code warning with the t at the end
-;;  (color-theme-sanityinc-tomorrow-night)
 
+(load-theme 'sanityinc-tomorrow-night t)  ;; textmate twilight, ignore lisp code warning with the t at the end
 
 ;; company mode.  this is working but heavy rails dependency to date (and pry in Gemfile) read setu
 
@@ -1066,26 +1042,9 @@ Null prefix argument turns off the mode."
 
 (require 'xclip)
 
-(require 'docker)
-(require 'docker-tramp)
-(require 'dockerfile-mode)
 
 ;; https://github.com/dgutov/robe  some good docs
 
-;;A Dockerfile mode for emacs
-
-;; (add-to-list 'load-path "/your/path/to/dockerfile-mode/")
-
-(require 'dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-;;Adds syntax highlighting as well as the ability to build the image directly (C-c C-b) from the buffer.
-
-;;You can specify the image name in the file itself by adding a line like this at the top of your Dockerfile.
-
-;; ## -*- docker-image-name: "your-image-name-here" -*-
-;; If you don't, you'll be prompted for an image name each time you build.
-
-;; https://github.com/Silex/docker.el
 
 ;; Display time in the mode line
 ;; Put this line last to prove (by the time in the mode line) 
@@ -1097,6 +1056,7 @@ Null prefix argument turns off the mode."
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
 
+(load-file "~/dot.emacs/.init.d/optional_and_platform_dependent.el")
 
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.

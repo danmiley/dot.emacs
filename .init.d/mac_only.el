@@ -1,3 +1,8 @@
+;; mac only packages
+;;   dash-functional
+;;   kdate-at-point
+;; apples-mode
+
 ;; http://puntoblogspot.blogspot.com/2014/01/ann-helm-dash-documentation-browser-for.html
 
 (defun mac-string-to-utxt (string &optional coding-system)
@@ -104,7 +109,6 @@
 ;; press control-c g to google the selected region
 (global-set-key (kbd "C-c f") 'gll-region)
 
-
 (if window-system
 (cond ((fboundp 'global-font-lock-mode)
        ;; Turn on font-lock in all modes that support it
@@ -130,38 +134,6 @@
 ;;Using Emacs from within the terminal in OSX completely breaks copy+paste support. This chunk of code from emacswiki restores it.
 
 ;; xclip for coy/paste
-;; google-region
-(defun google-region (&optional flags)
-  "Google the selected region"
-  (interactive)
-  (let ((query (buffer-substring (region-beginning) (region-end))))
-    (browse-url (concat "http://www.google.com/search?ie=utf-8&oe=utf-8&q=" query))))
-;; press control-c g to google the selected region
-(global-set-key (kbd "C-c g") 'google-region)
-;; google-region
-
-;; load-url-region
-;; http://www.adobe.com
-(defun load-url-region (&optional flags)
-  "open a web browser with the selected region"
-  (interactive)
-  (let ((query (buffer-substring (region-beginning) (region-end))))
-    (browse-url (concat "" query))))
-;; press control-c g to google the selected region
-(global-set-key (kbd "C-c l") 'load-url-region)
-
-(defun yank-chrome-url ()
-  "Yank current URL from Chrome"
-  (interactive)
-  (require 'apples-mode)
-    (apples-do-applescript "tell application \"Google Chrome\"
- get URL of active tab of first window
-end tell"
-			   #'(lambda (url status script)
-			       ;; comes back with quotes which we strip off
-			       (insert (subseq url 1 (1- (length url)))))))
-(global-set-key (kbd "C-c y") 'yank-chrome-url)
-
 
 ;;Well, here is a little hack that lets you launch arbitrary files from a Dired view of a directory; using the operating system's registered application; ie, if you navigate to a .pdf file and hit 'l', Acrobat (or whatever) will launch and show you the file. Now I never have to use the accursed Finder. Works on Mac OS X and Ubuntu; might need modifcations for other systems.
 ;;; Hack dired to launch files with 'l' key.  Put this in your ~/.emacs file
@@ -185,13 +157,6 @@ end tell"
 ;; 	 ;; How to define your own key bindings:
 ;; 	 (define-key dired-mode-map " " 'scroll-up)
 ;; 	 (define-key dired-mode-map "l" 'dired-launch-command))))
-
-;;https://github.com/stanaka/dash-at-point
-
-(autoload 'dash-at-point "dash-at-point"
-  "Search the word at point with Dash." t nil)
-(global-set-key "\C-cd" 'dash-at-point)
-(global-set-key "\C-ce" 'dash-at-point-with-docset)
 
 
 ;;Ensure dired-launch is enabled in dired-mode:
