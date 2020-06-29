@@ -63,7 +63,7 @@
 
 ;; mac only packages
 ;;   dash-functional
-;;   date-at-point
+;;   kdate-at-point
 ;; apples-mode
 
 (add-to-list 'package-archives
@@ -91,7 +91,7 @@
   "Kill buffers matching REGEXP without asking for confirmation."
   (interactive "Kill buffers matching this regular expression: ")
   (flet-cl ((kill-buffer-ask (buffer) (save-buffer buffer) (kill-buffer buffer)))
-;;  (flet ((kill-buffer-ask (buffer)  (kill-buffer buffer)))
+;;  (fletdas ((kill-buffer-ask (buffer)  (kill-buffer buffer)))
     (kill-matching-buffers regexp)))
 
 (define-minor-mode sensitive-mode
@@ -954,9 +954,10 @@ Null prefix argument turns off the mode."
 
 ;; magit 
 
-;; (require 'git)
+(require 'git)
 ; git hooks, using old magit until can get 24.4 on ubuntu
-(load-file "~/dot.emacs/.init.d/magit/magit.el")  
+;; (load-file "~/dot.emacs/.init.d/magit/magit.el")  
+;; 2020 26.3, now can install with package-install ->> magit
 (require 'magit)
 
 (eval-when-compile (require 'cl))
