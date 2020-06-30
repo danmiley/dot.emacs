@@ -164,12 +164,6 @@ Null prefix argument turns off the mode."
 (global-set-key  [(meta .)] 'find-tag-other-window)
 
 
-;; trial
-(setq explicit-bash-args (list "--login" "--init-file" "/Users/dan/.profile" "-i"))
-
-(setq path "/opt/local/bin:/opt/local/sbin:/Users/dan/bin:/usr/local/git/bin/git:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin:/opt/local/bin:/opt/local/sbin:/Users/dan/.rvm/gems/ruby-1.9.2-p320/bin:/Users/dan/.rvm/gems/ruby-1.9.2-p320@global/bin:/Users/dan/.rvm/rubies/ruby-1.9.2-p320/bin:/Users/dan/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin/git:/usr/local/git/bin:/Users/dan/bin:/usr/X11/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/Users/dan/.rvm/bin")
-(setenv "PATH" path)
-
 ;; (defun set-exec-path-from-shell-PATH ()
 ;;   (let ((path-from-shell 
 ;;       (replace-regexp-in-string "[[:space:]\n]*$" "" 
@@ -233,8 +227,7 @@ Null prefix argument turns off the mode."
 ;; ;; (load-file "~/Dropbox/home/dot.emacs.d/thingatpt+.el")
 
 (add-hook 'c-mode-common-hook
-(lambda ()(setq c-hungry-delete-key t)))
-
+(lambda ()(setq c-hungry-delete-key t)))    
 ;; enable global hungry delete
 (require 'cc-mode)    
 ;;(global-set-key (kbd "C-d") 'c-hungry-delete-forward)
@@ -1042,7 +1035,6 @@ Null prefix argument turns off the mode."
 
 (require 'xclip)
 
-
 ;; https://github.com/dgutov/robe  some good docs
 
 
@@ -1056,7 +1048,10 @@ Null prefix argument turns off the mode."
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/elpa")
 
-(load-file "~/dot.emacs/.init.d/optional_and_platform_dependent.el")
+(defun load-extended-functions ()
+	"add fns that need packages installed or dont make sense on all platforms"
+	(load-file "~/dot.emacs/.init.d/optional_and_platform_dependent.el")
+)
 
 ;;-----------------------------------------------------------------------------
 ;; END File      : DOT Emacs file.

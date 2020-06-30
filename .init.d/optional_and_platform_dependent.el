@@ -93,3 +93,14 @@ end tell"
 
 (load-file "~/dot.emacs/fixme.el")   ;; colors the tags used to indicate what should be fixed(load-file "~/dot.emacs.d/python-mode.el")`xxu`x
 (load-file "~/dot.emacs/superbracket.el") 
+
+
+
+;; very specific, prob to fix
+
+;; trial
+(setq explicit-bash-args (list "--login" "--init-file" "/Users/dan/.profile" "-i"))
+
+(setq path "/opt/local/bin:/opt/local/sbin:/Users/dan/bin:/usr/local/git/bin/git:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin:/opt/local/bin:/opt/local/sbin:/Users/dan/.rvm/gems/ruby-1.9.2-p320/bin:/Users/dan/.rvm/gems/ruby-1.9.2-p320@global/bin:/Users/dan/.rvm/rubies/ruby-1.9.2-p320/bin:/Users/dan/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/opt/local/bin:/opt/local/sbin:/usr/local/git/bin/git:/usr/local/git/bin:/Users/dan/bin:/usr/X11/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/usr/local/mysql/bin:/opt/local/var/scala/bin:/Users/dan/.rvm/bin")
+(setenv "PATH" path)
+
