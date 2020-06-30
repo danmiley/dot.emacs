@@ -1050,6 +1050,7 @@ Null prefix argument turns off the mode."
 
 (defun load-extended-functions ()
 	"add fns that need packages installed or dont make sense on all platforms"
+	(interactive)
 	(load-file "~/dot.emacs/.init.d/optional_and_platform_dependent.el")
 )
 
