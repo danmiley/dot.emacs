@@ -1,4 +1,5 @@
 *#
 /.init.d/.emacs.desktop
 *.init.d/.DS_Store
+*/.DS_Store
 .#*
