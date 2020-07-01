@@ -534,6 +534,12 @@ Null prefix argument turns off the mode."
     (message (concat "Loaded " tags-file))))
 
 
+(defun build-etags (dir-name)
+  (interactive)
+  (message "building project tags")
+  (shell-command (concat "find . -name \"*.rb\" | etags -"))
+  (message "tags built successfully"))
+
   ;;;  Auto refresh of the tags file
 
   ;;;  Jonas.Jarnestrom<at>ki.ericsson.se A smarter               
