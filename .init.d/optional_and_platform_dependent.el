@@ -1,3 +1,12 @@
+;; magit 
+
+;;(require 'git)
+; git hooks, using old magit until can get 24.4 on ubuntu
+;; (load-file "~/dot.emacs/.init.d/magit/magit.el")  
+;; 2020 26.3, now can install with package-install ->> magit
+(require 'magit)
+
+
  (ignore-errors
   (load-file "~/dot.emacs/.init.d/omnifocus.el")
   (load-file "~/dot.emacs/.init.d/new_stuff_settings.el")

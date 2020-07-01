@@ -943,13 +943,6 @@ Null prefix argument turns off the mode."
 (setq c-continued-brace-offset  0)
 (setq tab-width  4)
 
-;; magit 
-
-(require 'git)
-; git hooks, using old magit until can get 24.4 on ubuntu
-;; (load-file "~/dot.emacs/.init.d/magit/magit.el")  
-;; 2020 26.3, now can install with package-install ->> magit
-(require 'magit)
 
 (eval-when-compile (require 'cl))
 
