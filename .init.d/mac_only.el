@@ -5,6 +5,31 @@
 
 ;; http://puntoblogspot.blogspot.com/2014/01/ann-helm-dash-documentation-browser-for.html
 
+
+(defun pbcopy ()
+  (interactive)
+  (let ((deactivate-mark t))
+    (call-process-region (point) (mark) "pbcopy")))
+
+(defun pbpaste ()
+  (interactive)
+  (call-process-region (point) (if mark-active (mark) (point)) "pbpaste" t t))
+
+(defun pbcut ()
+  (interactive)
+  (pbcopy)
+  (delete-region (region-beginning) (region-end)))
+
+
+(defun copy-from-osx ()
+  (shell-command-to-string "pbpaste"))
+
+(defun paste-to-osx (text &optional push)
+  (let ((process-connection-type nil))
+    (let ((proc (start-process "pbcopy" "*Messages*" "pbcopy")))
+      (process-send-string proc text)
+      (process-send-eof proc))))
+
 (defun mac-string-to-utxt (string &optional coding-system)
       (or coding-system (setq coding-system mac-system-coding-system))
       (let (data encoding)
@@ -147,6 +172,12 @@
 ;;    nil
 ;;    (dired-get-marked-files t current-prefix-arg)))
 
+ 
+(defun git-file-history ()
+  "pop up the git file history in browser"
+      (interactive)
+     (shell-command (concat "git-file-history " (buffer-file-name)  )))
+(global-set-key (kbd "C-c h") 'git-file-history)
 
 ;; ;; view the file
 ;; (setq dired-load-hook
@@ -181,3 +212,4 @@
 ;;                     :width 'normal)
 ;; (add-to-list 'default-frame-alist
 ;;              '(font . "Source Code Pro"))
+
