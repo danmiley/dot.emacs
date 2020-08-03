@@ -36,30 +36,6 @@
 
 (require 'package) ;; You might already have this line
 
-(setq package-list '(autopair yaml-mode
-			      ;;
-			      org
-			      ;;
-			      color-theme color-theme-sanityinc-tomorrow  twilight
-			      ;;
-			      docker
-			      docker-tramp
-			      dockerfile-mode
-			      ;;
-			      rinari
-			       apples-mode
-			      find-file-in-project
-			      ;; compa
-;;			      company
-;;			      company-inf-ruby
-			      rvm
-			      
-			      ;;
-			      thingatpt ;; thingatpt+  (can't get + to work as an install, manual load for now)
-			      session rspec-mode fixmee json-mode textmate eshell
-			      xclip
-			      ))
-
 
 
 (add-to-list 'package-archives
@@ -335,18 +311,28 @@ Null prefix argument turns off the mode."
 (global-set-key (kbd "\C-cf") 'next-buffer)
 
 ;; tried but new snippet package didnt configure right, sticking to old setup for now. 
- (ignore-errors
-(add-to-list 'load-path
-                   "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c")
-    (require 'yasnippet) ;; not yasnippet-bundle
-    (yas/initialize)   ;; TODO
-    (yas/load-directory "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets")
-    (yas-global-mode 1))
+;;  (ignore-errors
+;; (add-to-list 'load-path
+;;                    "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c")
+;;     (require 'yasnippet) ;; not yasnippet-bundle
+;;     (yas/initialize)   ;; TODO
+;;     (yas/load-directory "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets")
+;;     (yas-global-mode 1))
+
+;; (setq yas-snippet-dirs '("~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets"))
+
+  (require 'yasnippet) ;; not yasnippet-bundle
+(setq yas-snippet-dirs '("~/dot.emacs/snippets"))
+;;			   "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets/text-mode/ruby-mode"
+;;			   "~/dot.emacs/.init.d/plugins/yasnippet-0.6.1c/snippets" ))
+  (yas-global-mode 1)
+
+(load-file "~/dot.emacs/snippets/ruby-mode/.yas-compiled-snippets.el")
 
 ;;As a workaround, you can redefine the Yasnippet expansion key instead, as explained in the FAQ:
 
-;; (define-key yas-minor-mode-map (kbd "<tab>") nil)
-;; (define-key yas-minor-mode-map (kbd "TAB") nil)
+;;(define-key yas-minor-mode-map (kbd "<tab>") nil)
+;;(define-key yas-minor-mode-map (kbd "TAB") nil)
 ;; (define-key yas-minor-mode-map (kbd "<C-tab>") 'yas-expand)
 
 ;; In this way, you use <C-tab> to expand Yasnippets and the TAB key for auto-complete-mode.
@@ -397,6 +383,32 @@ Null prefix argument turns off the mode."
 (defvar autopair-modes '(r-mode ruby-mode rspec-mode))
 (defun turn-on-autopair-mode () (autopair-mode 1))
 (dolist (mode autopair-modes) (add-hook (intern (concat (symbol-name mode) "-hook")) 'turn-on-autopair-mode))
+
+(setq package-list '(autopair yaml-mode
+			      ;;
+			      org
+			      ;;
+			      color-theme color-theme-sanityinc-tomorrow  twilight
+			      ;;
+			      docker
+			      docker-tramp
+			      dockerfile-mode
+			      ;;
+			      rinari
+			       apples-mode
+			      find-file-in-project
+			      ;; compa
+;;			      company
+;;			      company-inf-ruby
+			      rvm
+			      
+			      ;;
+			      thingatpt ;; thingatpt+  (can't get + to work as an install, manual load for now)
+			      session rspec-mode fixmee json-mode textmate eshell
+			      xclip
+			      ))
+
+
 
 ;; sessions
 

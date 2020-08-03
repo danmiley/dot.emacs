@@ -6,3 +6,7 @@
 (set-frame-parameter nil 'alpha 0.9)
 
 (load-file "~/dot.emacs/.init.d/.emacs")
+
+
+;; things to install up fromt
+;; package-install xclip
