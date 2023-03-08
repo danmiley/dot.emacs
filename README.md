@@ -15,39 +15,36 @@ graph LR
   EC2 --> VPC
 ```
 
-```
-C4Context
-title System Context diagram for Internet Banking System
+```plantuml
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/v2.3.0/C4_Container.puml
 
-Person(customerA, "Banking Customer A", "A customer of the bank, with personal bank accounts.")
-Person(customerB, "Banking Customer B")
-Person_Ext(customerC, "Banking Customer C")
-System(SystemAA, "Internet Banking System", "Allows customers to view information about their bank accounts, and make payments.")
+!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v18.0/dist
+!includeurl AWSPUML/AWSCommon.puml
+!includeurl AWSPUML/SecurityIdentityCompliance/Cognito.puml
+!includeurl AWSPUML/ApplicationIntegration/SimpleQueueService.puml
+!includeurl AWSPUML/ApplicationIntegration/SimpleNotificationService.puml
+!includeurl AWSPUML/Compute/EC2.puml
+!includeurl AWSPUML/Database/DynamoDB.puml
+!includeurl AWSPUML/Compute/Lambda.puml
 
-Person(customerD, "Banking Customer D", "A customer of the bank, <br/> with personal bank accounts.")
+!theme flat
+!caption C4 Context diagram for AWS Engineering System
 
-Enterprise_Boundary(b1, "BankBoundary") {
+LAYOUT_WITH_LEGEND()
+title AWS Engineering System - C4 Context Diagram
 
-  SystemDb_Ext(SystemE, "Mainframe Banking System", "Stores all of the core banking information about customers, accounts, transactions, etc.")
+Person_Ext(user, "User")
+System_Ext(browser, "Web Browser")
+Enterprise_Boundary_AWS(aws, "AWS")
 
-  System_Boundary(b2, "BankBoundary2") {
-    System(SystemA, "Banking System A")
-    System(SystemB, "Banking System B", "A system of the bank, with personal bank accounts.")
-  }
+user -> browser: Uses
+browser -> aws: HTTP, HTTPS
 
-  System_Ext(SystemC, "E-mail system", "The internal Microsoft Exchange e-mail system.")
-  SystemDb(SystemD, "Banking System D Database", "A system of the bank, with personal bank accounts.")
-
-  Boundary(b3, "BankBoundary3", "boundary") {
-    SystemQueue(SystemF, "Banking System F Queue", "A system of the bank, with personal bank accounts.")
-    SystemQueue_Ext(SystemG, "Banking System G Queue", "A system of the bank, with personal bank accounts.")
-  }
-}
-
-BiRel(customerA, SystemAA, "Uses")
-BiRel(SystemAA, SystemE, "Uses")
-Rel(SystemAA, SystemC, "Sends e-mails", "SMTP")
-Rel(SystemC, customerA, "Sends e-mails to")
+System_Int(application, "Application")
+System_Db(db, "Database")
+System_Msg(mq, "Message Queue")
+System_Msg
 
 ```
 
