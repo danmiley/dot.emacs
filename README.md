@@ -15,7 +15,7 @@ graph LR
   EC2 --> VPC
 ```
 
-```plantuml
+<pre><code>```plantuml
 @startuml
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/v2.3.0/C4_Container.puml
 
@@ -44,8 +44,25 @@ browser -> aws: HTTP, HTTPS
 System_Int(application, "Application")
 System_Db(db, "Database")
 System_Msg(mq, "Message Queue")
-System_Msg
+System_Msg(tp, "Topic")
 
+application -down-> db: Reads from and writes to
+application -> mq: Sends messages to
+application <- tp: Receives messages from
+
+mq --> AWS_SQS: Uses
+tp --> AWS_SNS: Uses
+application --> AWS_Lambda: Uses
+
+AWS_S3 <--> application: Stores objects
+AWS_EC2 --> AWS_VPC: Runs in
+@enduml
+```
+
+You can then include the resulting diagram image in your Markdown file using a similar syntax as for images:
+
+```
+![C4 Context diagram for AWS Engineering System](<image URL>)
 ```
 
 NEW:
