@@ -1,6 +1,15 @@
 # dot.emacs
 std emacs configuration across os's
 
+```mermaid
+  graph TD;
+      A-->B;
+      A-->C;
+      B-->D;
+      C-->D;
+```
+
+
 NEW:
 ruby
 c-c i - doc lookup
