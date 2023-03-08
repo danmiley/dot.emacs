@@ -2,11 +2,17 @@
 std emacs configuration across os's
 
 ```mermaid
-  graph TD;
-      A-->B;
-      A-->C;
-      B-->D;
-      C-->D;
+graph LR
+  EC2["10 AWS EC2 instances"]
+  S3["Amazon S3"]
+  SQS["Amazon SQS"]
+  SNS["Amazon SNS"]
+  VPC["AWS VPC"]
+
+  EC2 --> S3
+  EC2 --> SQS
+  EC2 --> SNS
+  EC2 --> VPC
 ```
 
 
