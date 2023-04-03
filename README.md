@@ -1,69 +1,6 @@
 # dot.emacs
 std emacs configuration across os's
 
-```mermaid
-graph LR
-  EC2["10 AWS EC2 instances"]
-  S3["Amazon S3"]
-  SQS["Amazon SQS"]
-  SNS["Amazon SNS"]
-  VPC["AWS VPC"]
-
-  EC2 --> S3
-  EC2 --> SQS
-  EC2 --> SNS
-  EC2 --> VPC
-```
-
-<pre><code>```plantuml
-@startuml
-!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/v2.3.0/C4_Container.puml
-
-!define AWSPUML https://raw.githubusercontent.com/awslabs/aws-icons-for-plantuml/v18.0/dist
-!includeurl AWSPUML/AWSCommon.puml
-!includeurl AWSPUML/SecurityIdentityCompliance/Cognito.puml
-!includeurl AWSPUML/ApplicationIntegration/SimpleQueueService.puml
-!includeurl AWSPUML/ApplicationIntegration/SimpleNotificationService.puml
-!includeurl AWSPUML/Compute/EC2.puml
-!includeurl AWSPUML/Database/DynamoDB.puml
-!includeurl AWSPUML/Compute/Lambda.puml
-
-!theme flat
-!caption C4 Context diagram for AWS Engineering System
-
-LAYOUT_WITH_LEGEND()
-title AWS Engineering System - C4 Context Diagram
-
-Person_Ext(user, "User")
-System_Ext(browser, "Web Browser")
-Enterprise_Boundary_AWS(aws, "AWS")
-
-user -> browser: Uses
-browser -> aws: HTTP, HTTPS
-
-System_Int(application, "Application")
-System_Db(db, "Database")
-System_Msg(mq, "Message Queue")
-System_Msg(tp, "Topic")
-
-application -down-> db: Reads from and writes to
-application -> mq: Sends messages to
-application <- tp: Receives messages from
-
-mq --> AWS_SQS: Uses
-tp --> AWS_SNS: Uses
-application --> AWS_Lambda: Uses
-
-AWS_S3 <--> application: Stores objects
-AWS_EC2 --> AWS_VPC: Runs in
-@enduml
-```
-
-You can then include the resulting diagram image in your Markdown file using a similar syntax as for images:
-
-```
-![C4 Context diagram for AWS Engineering System](<image URL>)
-```
 
 NEW:
 ruby
