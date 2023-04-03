@@ -22,9 +22,13 @@ graph TD
 ```mermaid
 graph TD
     A[End user uploads an image] --> B[ECS app instance generates instructions]
+
+    subgraph App Worker
     B --> C[Instructions are saved in JSON file]
     C --> D[JSON file is uploaded to S3]
     D --> E[ECS app submits a job to SQS work queue]
+    end
+
     E --> F[EC2 worker reads the message from the queue]
 
     subgraph EC2 Worker
