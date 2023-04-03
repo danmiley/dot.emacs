@@ -21,7 +21,6 @@ graph TD
 
 ```mermaid
 graph TD
-graph TD
     A[End user uploads an image] --> B[ECS app instance generates instructions]
     B --> C[Instructions are saved in JSON file]
     C --> D[JSON file is uploaded to S3]
