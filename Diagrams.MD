@@ -1,3 +1,4 @@
+```mermaid
 graph TD
     A[End user uploads an image] --> B[ECS app instance generates instructions]
     B --> C[Instructions are saved in JSON file]
@@ -15,3 +16,4 @@ graph TD
     N --> O[Worker applies instructions to intermediate image]
     O --> P[Worker creates a derivative image]
     P --> Q[Derivative image is uploaded to S3]
+````
